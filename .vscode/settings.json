@@ -1,0 +1,11 @@
+{
+  "terminal.integrated.fontFamily": "Hack Nerd Font",
+  "terminal.integrated.shell.osx": "/bin/zsh",
+  "editor.tabSize": 2,
+  "files.eol": "\n",
+  "javascript.format.enable": false,
+  "editor.formatOnSave": true,
+  "prettier.trailingComma": "all",
+  "prettier.eslintIntegration": true,
+  "javascript.implicitProjectConfig.checkJs": true
+}

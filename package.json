@@ -1,0 +1,69 @@
+{
+  "name": "advertiseit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "babel-node src/db/seeders/index.js",
+    "seed:admin": "babel-node src/db/seeders/seedSuperAdmin.js",
+    "migrate": "sequelize db:migrate",
+    "migrate:drop": "sequelize db:migrate:undo:all",
+    "migrate:reset": "sequelize db:migrate:undo:all && npm run migrate",
+    "start:dev": "nodemon --watch src --watch .env --watch package.json --watch .eslintrc src/index.js --exec babel-node --presets es2015,stage-2",
+    "restart": "npm run build && npm run migrate:reset && node build/index.js",
+    "start": "npm run build && npm run migrate && node build/index.js",
+    "build": "babel ./src -d build/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/henperi/AdvertiseIt.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/henperi/AdvertiseIt/issues"
+  },
+  "homepage": "https://github.com/henperi/AdvertiseIt#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.13.0",
+    "nodemon": "^1.19.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
+    "coveralls": "^3.0.3",
+    "cross-env": "^5.2.0",
+    "dotenv": "^8.0.0",
+    "express": "^4.16.4",
+    "express-rate-limit": "^4.0.1",
+    "express-validator": "^5.3.1",
+    "faker": "^4.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "morgan": "^1.9.1",
+    "naija-phone-number": "^1.0.2",
+    "pg": "^7.11.0",
+    "sequelize": "^5.18.4",
+    "sequelize-cli": "^5.5.1",
+    "shortid": "^2.2.15"
+  }
+}
