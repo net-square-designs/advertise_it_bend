@@ -56,6 +56,25 @@ class UserRepo extends Repository {
   }
 
   /**
+   * @description Method to get a user by email
+   * @param {string} id
+   *
+   * @returns {Promise<*>} Response
+   */
+  static async getById(id) {
+    const user = this.User.findOne({
+      where: {
+        [Op.or]: [{ id }],
+      },
+      include: [{ model: this.Profile, as: 'Profile' }],
+    }).catch((error) => {
+      throw new Error(error);
+    });
+
+    return user;
+  }
+
+  /**
    *
    * @param {createData} data
    * @property {string} email

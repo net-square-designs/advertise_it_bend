@@ -5,7 +5,7 @@ import UserRepo from '../repositories/UserRepo';
 import { hashPassword, comparePassword } from '../helpers/passwordHelpers';
 import generateUniqueId from '../helpers/generateUniqueId';
 import { generateUserAuthToken } from '../helpers/generateAuthToken';
-import setupTokenData from '../helpers/tokenHelper';
+import { setupTokenData, verifyToken } from '../helpers/tokenHelper';
 import { AppResponse } from '../helpers/AppResponse';
 
 /**
@@ -88,6 +88,58 @@ class AuthController {
       return AppResponse.success(res, {
         message: 'Authenticated successfully',
         data: { token },
+      });
+    } catch (errors) {
+      return AppResponse.serverError(res, { errors });
+    }
+  }
+
+  /**
+   * @description controller method to reset a user's password
+   * @param {*} req re
+   * @param {*} res res
+   *
+   * @returns {Promise<AppResponse>} The Return Object
+   */
+  static async resetUserPassword(req, res) {
+    const { oldPassword, newPassword } = req.body;
+    const { resetId } = req.params;
+
+    const decodedToken = verifyToken(resetId);
+
+    if (!decodedToken) {
+      return AppResponse.forbidden(res, {
+        message: 'Invalid password reset credentials',
+      });
+    }
+
+    try {
+      const { id } = decodedToken;
+      const user = await UserRepo.getById(id);
+
+      if (!user) {
+        return AppResponse.notFound(res, {
+          message: 'Unable to process process password reset request',
+        });
+      }
+
+      const isPasswordValid = comparePassword(oldPassword, user.password);
+
+      if (!isPasswordValid) {
+        return AppResponse.conflict(res, {
+          message: 'Your old password is wrong',
+        });
+      }
+
+      const hashedPassword = hashPassword(newPassword.trim());
+
+      await user.update({
+        password: hashedPassword,
+        secretKey: `${generateUniqueId()}-${user.email}`,
+      });
+
+      return AppResponse.success(res, {
+        message: 'Password updated successfully',
       });
     } catch (errors) {
       return AppResponse.serverError(res, { errors });

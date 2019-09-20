@@ -186,7 +186,7 @@ class AppResponse {
         return 'This error might be from us, send us a message at info@advertiseit.com if this continues';
       }
       console.log(errors);
-      return errors;
+      return errors.toString();
     };
     res.status(statusCode).json({
       success: false,
