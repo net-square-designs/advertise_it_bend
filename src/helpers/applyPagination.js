@@ -1,4 +1,4 @@
-import response from './responses';
+import { AppResponse } from './AppResponse';
 
 const applyPagination = (req, res, next) => {
   const { page: pageQuery = 0, pageSize: pageSizeQuery = 5 } = req.query;
@@ -8,8 +8,7 @@ const applyPagination = (req, res, next) => {
 
   if (page && pageSize) {
     if (pageSize > 25) {
-      return response.badRequest(res, {
-        issue: 'queryParram',
+      return AppResponse.badRequest(res, {
         message: 'pageSize must be less than 25',
       });
     }

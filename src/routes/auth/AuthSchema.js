@@ -30,6 +30,18 @@ class AuthSchema {
         .required(),
     });
   }
+
+  /**
+   * @description The schema used to validate the process of authenticating a user
+   */
+  static get loginUserSchema() {
+    return Joi.object({
+      email: Joi.string()
+        .email()
+        .required(),
+      password: Joi.string().required(),
+    });
+  }
 }
 
 export default AuthSchema;
