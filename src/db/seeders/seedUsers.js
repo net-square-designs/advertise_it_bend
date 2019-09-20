@@ -49,7 +49,7 @@ const seedUser = () => new Promise(() => {
           uniqueId: generateUniqueId(),
           phone: faker.phone.phoneNumber(),
           password: hashedPassword,
-          secreteKey: `${generateUniqueId()}-${email}`,
+          secretKey: `${generateUniqueId()}-${email}`,
           Profile: {
             firstname,
             lastname,

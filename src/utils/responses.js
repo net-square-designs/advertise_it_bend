@@ -39,9 +39,16 @@ const response = {
   /**
    *
    */
-  badRequest: (res, errors, code = 400) => res.status(code).json({
+  badRequest: ({
+    res,
+    errors,
+    statusCode = 400,
+    message = 'Bad Request',
+  }) => res.status(statusCode).json({
+    statusCode,
+    message,
     success: false,
-    errors: errors.errors ? errors.errors : [{ ...errors }],
+    errors: errors.errors ? errors.errors : errors,
   }),
 
   /**
