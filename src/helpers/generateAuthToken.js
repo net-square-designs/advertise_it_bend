@@ -3,15 +3,15 @@ import jwt from 'jsonwebtoken';
 /**
  * @typedef {{ firstname: string}} Profile
  * @typedef {{
-   id: string, uniqueId: string, email: string, fullname: string
-   phone: string, level: string, secretKey:string
-  }} UserData
+ *  id: string, uniqueId: string, email: string, fullname: string
+ *  phone: string, level: string, secretKey:string
+ * }} UserData
  *
  * @typedef {{
-   id: string, uniqueId: string, email: string,
-   phone: string, level: string, secretKey:string
-   Profile: Profile
-  }} AdminData
+ *  id: string, uniqueId: string, email: string,
+ *  phone: string, accountType: string, secretKey:string
+ *  Profile: Profile
+ * }} AdminData
  */
 
 /**
@@ -26,7 +26,7 @@ const generateUserAuthToken = ({
   email,
   Profile: { firstname },
   phone,
-  level,
+  accountType,
   secretKey,
 }) => {
   try {
@@ -37,7 +37,7 @@ const generateUserAuthToken = ({
         firstname,
         email,
         phone,
-        level,
+        accountType,
         secretKey,
       },
       process.env.JWT_SECRET,
