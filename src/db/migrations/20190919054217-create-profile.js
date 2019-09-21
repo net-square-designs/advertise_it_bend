@@ -15,6 +15,15 @@ module.exports = {
     middlename: {
       type: Sequelize.STRING,
     },
+    image: {
+      type: Sequelize.STRING,
+    },
+    bio: {
+      type: Sequelize.TEXT,
+    },
+    storeName: {
+      type: Sequelize.STRING,
+    },
     gender: {
       type: Sequelize.STRING,
     },

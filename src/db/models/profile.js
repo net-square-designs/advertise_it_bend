@@ -1,3 +1,12 @@
+// @ts-nocheck
+// eslint-disable-next-line no-unused-vars
+import Sequelize from 'sequelize';
+/**
+ * @param {*} sequelize
+ * @param {Sequelize.DataTypes} DataTypes
+ *
+ * @returns {Sequelize.Model} Model
+ */
 export default (sequelize, DataTypes) => {
   const Profile = sequelize.define(
     'Profile',
@@ -5,6 +14,9 @@ export default (sequelize, DataTypes) => {
       firstname: DataTypes.STRING,
       lastname: DataTypes.STRING,
       middlename: DataTypes.STRING,
+      image: DataTypes.STRING,
+      bio: DataTypes.TEXT,
+      storeName: DataTypes.STRING,
       gender: DataTypes.STRING,
       dateOfBirth: DataTypes.STRING,
       nationality: DataTypes.STRING,
