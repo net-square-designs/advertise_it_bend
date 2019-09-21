@@ -4,9 +4,12 @@ import Sequelize from 'sequelize';
 // Model
 import model from '../db/models';
 
-const { User, Profile } = model;
+const {
+  User, Profile, Product, ProductImage,
+} = model;
+
 /**
- * User Repo
+ * Repository
  */
 class Repository {
   /**
@@ -25,6 +28,20 @@ class Repository {
    */
   static get Profile() {
     return Profile;
+  }
+
+  /**
+   * @type {Model}
+   */
+  static get Product() {
+    return Product;
+  }
+
+  /**
+   * @type {Model}
+   */
+  static get ProductImage() {
+    return ProductImage;
   }
 }
 

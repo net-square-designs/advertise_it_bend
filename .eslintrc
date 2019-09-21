@@ -29,7 +29,7 @@
     "no-shadow": [
       "error",
       {
-        "allow": ["req", "res", "err"]
+        "allow": ["req", "res", "next", "err"]
       }
     ],
     "valid-jsdoc": [
