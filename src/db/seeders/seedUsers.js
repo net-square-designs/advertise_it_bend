@@ -37,8 +37,6 @@ const seedUser = () => new Promise(() => {
         return process.stdout.write(`${message} '\n'`);
       }
 
-      count += 1;
-
       const hashedPassword = hashPassword(
         faker.internet.password().trim(),
       );
@@ -58,13 +56,14 @@ const seedUser = () => new Promise(() => {
         },
         { include: [{ model: Profile, as: 'Profile' }] },
       );
+      count += 1;
 
       const token = process.env.NODE_ENV !== 'production'
         ? generateUserAuthToken(superAdmin)
         : '';
-      console.log(token, '\n');
 
-      return process.stdout.write(`${count} Users seeded successfully`);
+      process.stdout.write(`${count} Users seeded successfully \n`);
+      return process.stdout.write(`${token} \n \n`);
     });
   } catch (error) {
     console.log(error);
