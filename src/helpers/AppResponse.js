@@ -176,7 +176,7 @@ class AppResponse {
   static serverError(
     res,
     {
-      message = 'An internal occured',
+      message = 'An internal error occured',
       statusCode = 500,
       errors = {},
     } = {},
