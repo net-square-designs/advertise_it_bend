@@ -92,6 +92,41 @@ class ProductRepo extends Repository {
   }
 
   /**
+   * @description Method to get a product by id and userId
+   * @param {Function} usePagination
+   * @param {{isPublished: boolean}} isPublished
+   *
+   * @returns {Promise<*>} Response
+   */
+  static async getByPagination(usePagination, { isPublished }) {
+    const products = await this.Product.findAll({
+      ...usePagination(),
+      where: { [Op.or]: [{ isPublished }] },
+      include: [{ model: this.ProductImage, as: 'ProductImages' }],
+    }).catch((error) => {
+      throw new Error(error);
+    });
+
+    return products;
+  }
+
+  /**
+   * @description Method to count products
+   * @param {{isPublished: boolean}} data
+   *
+   * @returns {Promise<*>} Response
+   */
+  static async countProducts({ isPublished = true }) {
+    const count = await this.Product.count({
+      where: { [Op.or]: [{ isPublished }] },
+    }).catch((error) => {
+      throw new Error(error);
+    });
+
+    return count;
+  }
+
+  /**
    *
    * @param {createData} data
    *
@@ -108,6 +143,44 @@ class ProductRepo extends Repository {
       description,
       userId,
       isPublished: false,
+    }).catch((error) => {
+      throw new Error(error);
+    });
+
+    return product;
+  }
+
+  /**
+   *
+   * @param {{ viewerId: number, productId: number }} data
+   *
+   * @returns {Promise<*>} Response
+   */
+  static async addView(data) {
+    const { productId, viewerId } = data;
+
+    const product = this.ProductView.create({
+      productId,
+      viewerId,
+    }).catch((error) => {
+      throw new Error(error);
+    });
+
+    return product;
+  }
+
+  /**
+   *
+   * @param {{ likerId: number, productId: number }} data
+   *
+   * @returns {Promise<*>} Response
+   */
+  static async addLike(data) {
+    const { productId, likerId } = data;
+
+    const product = this.ProductLike.create({
+      productId,
+      likerId,
     }).catch((error) => {
       throw new Error(error);
     });

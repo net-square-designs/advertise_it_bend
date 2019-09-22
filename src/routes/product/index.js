@@ -32,4 +32,9 @@ productRouter.post(
   ProductController.addImages,
 );
 
+/**
+ * fetch products
+ */
+productRouter.get('/', ProductController.fetchProducts);
+
 export default productRouter;
