@@ -1,5 +1,6 @@
 // Repos
 import ProductRepo from '../repositories/ProductRepo';
+import ProductImageRepo from '../repositories/ProductImageRepo';
 
 // Helpers
 import { AppResponse } from '../helpers/AppResponse';
@@ -45,94 +46,60 @@ class ProductController {
     }
   }
 
-  // /**
-  //  * @description controller method to authenticate a user
-  //  * @param {*} req re
-  //  * @param {*} res res
-  //  *
-  //  * @returns {Promise<AppResponse>} The Return Object
-  //  */
-  // static async authenticateUser(req, res) {
-  //   const { email, password } = req.body;
+  /**
+   * @description controller method to create a new product
+   * @param {*} req req
+   * @param {*} res res
+   *
+   * @returns {Promise<AppResponse>} The Return Object
+   */
+  static async addImages(req, res) {
+    const { images } = req.body;
+    const { productId } = req.params;
+    const { id } = res.locals.user;
+    const maxImageLength = 4;
 
-  //   try {
-  //     const user = await UserRepo.getByEmail(email);
+    try {
+      const product = await ProductRepo.getByIdAndUserId({
+        id: productId,
+        userId: id,
+      });
 
-  //     if (!user) {
-  //       return AppResponse.notFound(res, {
-  //         message: 'Invalid login credentials',
-  //       });
-  //     }
+      if (!product) {
+        return AppResponse.notFound(res, {
+          message: 'Product not found',
+        });
+      }
 
-  //     const isPasswordValid = comparePassword(password, user.password);
+      if (product.ProductImages.length > maxImageLength) {
+        return AppResponse.conflict(res, {
+          message: 'Product already has 4 or more images',
+        });
+      }
+      if (product.ProductImages.length + images.length > maxImageLength) {
+        return AppResponse.conflict(res, {
+          message: `Product already has ${
+            product.ProductImages.length
+          } images. You can add a max of ${maxImageLength
+            - product.ProductImages.length} more`,
+        });
+      }
 
-  //     if (!isPasswordValid) {
-  //       return AppResponse.conflict(res, {
-  //         message: 'Invalid login credentials',
-  //       });
-  //     }
-  //     const token = generateUserAuthToken(setupTokenData(user));
+      const productImages = images.map(image => ({
+        ...image,
+        productId,
+      }));
 
-  //     return AppResponse.success(res, {
-  //       message: 'Authenticated successfully',
-  //       data: { token },
-  //     });
-  //   } catch (errors) {
-  //     return AppResponse.serverError(res, { errors });
-  //   }
-  // }
+      const addedImages = await ProductImageRepo.createMany(productImages);
 
-  // /**
-  //  * @description controller method to reset a user's password
-  //  * @param {*} req re
-  //  * @param {*} res res
-  //  *
-  //  * @returns {Promise<AppResponse>} The Return Object
-  //  */
-  // static async resetUserPassword(req, res) {
-  //   const { oldPassword, newPassword } = req.body;
-  //   const { resetId } = req.params;
-
-  //   const decodedToken = verifyToken(resetId);
-
-  //   if (!decodedToken) {
-  //     return AppResponse.forbidden(res, {
-  //       message: 'Invalid password reset credentials',
-  //     });
-  //   }
-
-  //   try {
-  //     const { id } = decodedToken;
-  //     const user = await UserRepo.getById(id);
-
-  //     if (!user) {
-  //       return AppResponse.notFound(res, {
-  //         message: 'Unable to process process password reset request',
-  //       });
-  //     }
-
-  //     const isPasswordValid = comparePassword(oldPassword, user.password);
-
-  //     if (!isPasswordValid) {
-  //       return AppResponse.conflict(res, {
-  //         message: 'Your old password is wrong',
-  //       });
-  //     }
-
-  //     const hashedPassword = hashPassword(newPassword.trim());
-
-  //     await user.update({
-  //       password: hashedPassword,
-  //       secretKey: `${generateUniqueId()}-${user.email}`,
-  //     });
-
-  //     return AppResponse.success(res, {
-  //       message: 'Password updated successfully',
-  //     });
-  //   } catch (errors) {
-  //     return AppResponse.serverError(res, { errors });
-  //   }
-  // }
+      return AppResponse.created(res, {
+        data: { addedImages },
+        message: 'Added images successfully',
+      });
+    } catch (errors) {
+      return AppResponse.serverError(res, { errors });
+    }
+  }
 }
 
 export default ProductController;

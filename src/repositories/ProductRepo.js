@@ -73,6 +73,25 @@ class ProductRepo extends Repository {
   }
 
   /**
+   * @description Method to get a product by id and userId
+   * @param {{ id: string, userId }} data
+   *
+   * @returns {Promise<*>} Response
+   */
+  static async getByIdAndUserId({ id, userId }) {
+    const product = this.Product.findOne({
+      where: {
+        [Op.and]: [{ id }, { userId }],
+      },
+      include: [{ model: this.ProductImage, as: 'ProductImages' }],
+    }).catch((error) => {
+      throw new Error(error);
+    });
+
+    return product;
+  }
+
+  /**
    *
    * @param {createData} data
    *

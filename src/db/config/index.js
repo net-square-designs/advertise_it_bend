@@ -2,7 +2,9 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const logQueries = process.env.NODE_ENV === 'production' && { logging: false };
+const logQueries = process.env.NODE_ENV === 'production' && {
+  logging: false,
+};
 
 module.exports = {
   development: {
@@ -16,7 +18,7 @@ module.exports = {
     ...logQueries,
   },
   production: {
-    use_env_variable: 'DB_URL',
+    use_env_variable: 'PROD_DB_URL',
     dialect: 'postgres',
     ...logQueries,
   },
