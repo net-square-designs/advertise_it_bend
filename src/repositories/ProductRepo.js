@@ -159,14 +159,22 @@ class ProductRepo extends Repository {
   static async addView(data) {
     const { productId, viewerId } = data;
 
-    const product = this.ProductView.create({
+    const isViewedAlready = await this.ProductView.findOne({
+      where: {
+        [Op.and]: [{ productId }, { viewerId }],
+      },
+    });
+
+    if (isViewedAlready) {
+      return;
+    }
+
+    this.ProductView.create({
       productId,
       viewerId,
     }).catch((error) => {
       throw new Error(error);
     });
-
-    return product;
   }
 
   /**

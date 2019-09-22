@@ -54,5 +54,28 @@ const checkUserAuth = async (req, res, next) => {
     });
   }
 };
+const tryUserAuth = async (req, res, next) => {
+  const token = req.headers.authorization;
 
-export { checkUserAuth };
+  if (!token) {
+    const { remoteAddress } = req.connection;
+    const { ip } = req;
+
+    res.locals.user = {
+      id: ip || remoteAddress,
+    };
+
+    return next();
+  }
+
+  try {
+    return checkUserAuth(req, res, next);
+  } catch (error) {
+    return AppResponse.serverError(res, {
+      message: 'An internal error occured',
+      errors: { error },
+    });
+  }
+};
+
+export { checkUserAuth, tryUserAuth };

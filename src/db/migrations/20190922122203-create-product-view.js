@@ -16,7 +16,7 @@ module.exports = {
       },
     },
     viewerId: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
     },
     createdAt: {
       allowNull: false,

@@ -128,6 +128,31 @@ class ProductController {
       return AppResponse.serverError(res, { errors });
     }
   }
+
+  /**
+   * @description controller method to fetch products
+   * @param {*} req req
+   * @param {*} res res
+   *
+   * @returns {Promise<AppResponse>} The Return Object
+   */
+  static async fetchOne(req, res) {
+    const { productId } = req.params;
+    const { id } = res.locals.user;
+
+    try {
+      const product = await ProductRepo.getById(productId);
+
+      if (product) {
+        ProductRepo.addView({ productId, viewerId: id.toString() });
+        return AppResponse.success(res, { data: { product } });
+      }
+
+      return AppResponse.notFound(res, { message: 'Product not found' });
+    } catch (errors) {
+      return AppResponse.serverError(res, { errors });
+    }
+  }
 }
 
 export default ProductController;

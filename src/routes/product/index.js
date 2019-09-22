@@ -4,7 +4,7 @@ import express from 'express';
 import ProductController from '../../controllers/ProductController';
 
 // Middlewares
-import { checkUserAuth } from '../../middlewares/auth';
+import { checkUserAuth, tryUserAuth } from '../../middlewares/auth';
 
 // Validations
 import { validateCreateProduct } from './productValidations';
@@ -36,5 +36,10 @@ productRouter.post(
  * fetch products
  */
 productRouter.get('/', ProductController.fetchProducts);
+
+/**
+ * fetch one product
+ */
+productRouter.get('/:productId', tryUserAuth, ProductController.fetchOne);
 
 export default productRouter;
