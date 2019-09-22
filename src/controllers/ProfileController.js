@@ -29,9 +29,24 @@ class ProfileController {
         });
       }
 
-      const updatedProfile = await profile.update({
-        ...getPayload(req),
-      });
+      const updatedProfile = await profile.update(
+        { ...getPayload(req) },
+        {
+          fields: [
+            'firstname',
+            'lastname',
+            'middlename',
+            'image',
+            'bio',
+            'storeName',
+            'gender',
+            'dateOfBirth',
+            'nationality',
+            'stateOfOrigin',
+            'stateOfResidence',
+          ],
+        },
+      );
 
       return AppResponse.success(res, {
         message: 'Profile updated successfully',

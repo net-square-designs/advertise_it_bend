@@ -1,8 +1,14 @@
 import express from 'express';
 
-import { validateCreateProduct } from './productValidations';
+// Controllers
 import ProductController from '../../controllers/ProductController';
+
+// Middlewares
 import { checkUserAuth } from '../../middlewares/auth';
+
+// Validations
+import { validateCreateProduct } from './productValidations';
+import { validateCreateProductImages } from '../productImage/productImageValidations';
 
 const productRouter = express.Router();
 
@@ -14,6 +20,16 @@ productRouter.post(
   checkUserAuth,
   validateCreateProduct,
   ProductController.create,
+);
+
+/**
+ * add images to a product
+ */
+productRouter.post(
+  '/:productId/images',
+  checkUserAuth,
+  validateCreateProductImages,
+  ProductController.addImages,
 );
 
 export default productRouter;
