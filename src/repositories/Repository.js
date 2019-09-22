@@ -5,7 +5,12 @@ import Sequelize from 'sequelize';
 import model from '../db/models';
 
 const {
-  User, Profile, Product, ProductImage,
+  User,
+  Profile,
+  Product,
+  ProductImage,
+  ProductView,
+  ProductLike,
 } = model;
 
 /**
@@ -42,6 +47,20 @@ class Repository {
    */
   static get ProductImage() {
     return ProductImage;
+  }
+
+  /**
+   * @type {Model}
+   */
+  static get ProductView() {
+    return ProductView;
+  }
+
+  /**
+   * @type {Model}
+   */
+  static get ProductLike() {
+    return ProductLike;
   }
 }
 

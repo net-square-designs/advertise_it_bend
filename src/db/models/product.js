@@ -16,6 +16,14 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'productId',
       as: 'ProductImages',
     });
+    Product.hasMany(models.ProductView, {
+      foreignKey: 'productId',
+      as: 'ProductViews',
+    });
+    Product.hasMany(models.ProductLike, {
+      foreignKey: 'productId',
+      as: 'ProductLikes',
+    });
   };
   return Product;
 };

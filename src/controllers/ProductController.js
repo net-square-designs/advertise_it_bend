@@ -71,7 +71,7 @@ class ProductController {
         });
       }
 
-      if (product.ProductImages.length > maxImageLength) {
+      if (product.ProductImages.length >= maxImageLength) {
         return AppResponse.conflict(res, {
           message: 'Product already has 4 or more images',
         });
@@ -96,6 +96,34 @@ class ProductController {
         data: { addedImages },
         message: 'Added images successfully',
       });
+    } catch (errors) {
+      return AppResponse.serverError(res, { errors });
+    }
+  }
+
+  /**
+   * @description controller method to fetch products
+   * @param {*} req req
+   * @param {*} res res
+   *
+   * @returns {Promise<AppResponse>} The Return Object
+   */
+  static async fetchProducts(req, res) {
+    const { usePagination, paginationData } = res.locals;
+    const isPublished = { isPublished: false };
+
+    try {
+      const countProducts = () => ProductRepo.countProducts(isPublished);
+      const getProducts = () => ProductRepo.getByPagination(usePagination, isPublished);
+
+      const [count, products] = await Promise.all([
+        countProducts(),
+        getProducts(),
+      ]);
+
+      const metaData = { count, ...paginationData };
+
+      return AppResponse.success(res, { data: { products, metaData } });
     } catch (errors) {
       return AppResponse.serverError(res, { errors });
     }
