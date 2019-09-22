@@ -3,7 +3,7 @@ export default (sequelize, DataTypes) => {
     'ProductView',
     {
       productId: DataTypes.STRING,
-      viewerId: DataTypes.INTEGER,
+      viewerId: DataTypes.STRING,
     },
     {},
   );

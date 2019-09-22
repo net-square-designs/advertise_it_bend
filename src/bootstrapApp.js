@@ -2,6 +2,7 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
+import expressip from 'express-ip';
 
 // Helpers
 import { setAppResponse, AppResponse } from './helpers/AppResponse';
@@ -25,6 +26,8 @@ const bootstrapApp = async (app) => {
   app.use(limiter);
   app.use(setAppResponse);
   app.use(usePagination);
+  app.use(expressip().getIpInfoMiddleware);
+  app.enable('trust proxy');
 
   await app.use('/api/v1', appRoutes);
   app.use('/*', (req, res) => AppResponse.notFound(res, { message: 'This endpoint does not exist' }));
