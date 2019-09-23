@@ -203,6 +203,82 @@ class ProductController {
       return AppResponse.serverError(res, { errors });
     }
   }
+
+  /**
+   * @description controller method to publish a product
+   * @param {*} req req
+   * @param {*} res res
+   *
+   * @returns {Promise<AppResponse>} The Return Object
+   */
+  static async publishProduct(req, res) {
+    const { productId } = req.params;
+    const { id } = res.locals.user;
+
+    try {
+      const getProduct = () => ProductRepo.getById(id);
+      const checkProductOwner = () => ProductRepo.getByIdAndUserId({
+        id: productId,
+        userId: id,
+      });
+      const [isProductOwner, product] = await Promise.all([
+        checkProductOwner(),
+        getProduct(),
+      ]);
+
+      if (!isProductOwner) {
+        return AppResponse.unAuthorized(res, {
+          message: 'Unable to publish another users product',
+        });
+      }
+      if (!product) {
+        return AppResponse.notFound(res, { message: 'Product not found' });
+      }
+
+      await product.update({ isPublished: true });
+      return AppResponse.success(res, { message: 'Product published' });
+    } catch (errors) {
+      return AppResponse.serverError(res, { errors });
+    }
+  }
+
+  /**
+   * @description controller method to unpublish a product
+   * @param {*} req req
+   * @param {*} res res
+   *
+   * @returns {Promise<AppResponse>} The Return Object
+   */
+  static async unPublishProduct(req, res) {
+    const { productId } = req.params;
+    const { id } = res.locals.user;
+
+    try {
+      const getProduct = () => ProductRepo.getById(id);
+      const checkProductOwner = () => ProductRepo.getByIdAndUserId({
+        id: productId,
+        userId: id,
+      });
+      const [isProductOwner, product] = await Promise.all([
+        checkProductOwner(),
+        getProduct(),
+      ]);
+
+      if (!isProductOwner) {
+        return AppResponse.unAuthorized(res, {
+          message: 'Unable to unpublish another users product',
+        });
+      }
+      if (!product) {
+        return AppResponse.notFound(res, { message: 'Product not found' });
+      }
+
+      await product.update({ isPublished: false });
+      return AppResponse.success(res, { message: 'Product unpublished' });
+    } catch (errors) {
+      return AppResponse.serverError(res, { errors });
+    }
+  }
 }
 
 export default ProductController;
