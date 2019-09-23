@@ -2,7 +2,9 @@ import formatJoiErrors from '../../utils/formatJoiErrors';
 import ProductSchema from './ProductSchema';
 import { AppResponse } from '../../helpers/AppResponse';
 
-const { createProduct } = ProductSchema;
+// import { numberify } from '../../utils/objectHelper';
+
+const { createProduct, productParams } = ProductSchema;
 
 const validateCreateProduct = async (req, res, next) => {
   try {
@@ -18,4 +20,18 @@ const validateCreateProduct = async (req, res, next) => {
   }
 };
 
-export { validateCreateProduct };
+const validateProductParams = async (req, res, next) => {
+  try {
+    // @ts-ignore
+    await productParams.validateAsync(req.params, {
+      abortEarly: false,
+    });
+    return next();
+  } catch (errors) {
+    return AppResponse.badRequest(res, {
+      errors: formatJoiErrors(errors),
+    });
+  }
+};
+
+export { validateCreateProduct, validateProductParams };

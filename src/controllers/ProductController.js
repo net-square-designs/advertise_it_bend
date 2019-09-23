@@ -178,6 +178,31 @@ class ProductController {
       return AppResponse.serverError(res, { errors });
     }
   }
+
+  /**
+   * @description controller method to like a product
+   * @param {*} req req
+   * @param {*} res res
+   *
+   * @returns {Promise<AppResponse>} The Return Object
+   */
+  static async bookmarkProduct(req, res) {
+    const { productId } = req.params;
+    const { id } = res.locals.user;
+
+    try {
+      const product = await ProductRepo.getById(productId);
+
+      if (!product) {
+        return AppResponse.notFound(res, { message: 'Product not found' });
+      }
+
+      await ProductRepo.addBookmark({ productId, bookmarkerId: id });
+      return AppResponse.success(res, { message: 'Product bookmarked' });
+    } catch (errors) {
+      return AppResponse.serverError(res, { errors });
+    }
+  }
 }
 
 export default ProductController;

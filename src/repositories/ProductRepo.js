@@ -203,6 +203,33 @@ class ProductRepo extends Repository {
       throw new Error(error);
     });
   }
+
+  /**
+   *
+   * @param {{ bookmarkerId: number, productId: number }} data
+   *
+   * @returns {Promise<void>} Response
+   */
+  static async addBookmark(data) {
+    const { productId, bookmarkerId } = data;
+
+    const isAlreadyBookmarked = await this.ProductBookmark.findOne({
+      where: {
+        [Op.and]: [{ productId }, { bookmarkerId }],
+      },
+    });
+
+    if (isAlreadyBookmarked) {
+      return;
+    }
+
+    this.ProductBookmark.create({
+      productId,
+      bookmarkerId,
+    }).catch((error) => {
+      throw new Error(error);
+    });
+  }
 }
 
 export default ProductRepo;
