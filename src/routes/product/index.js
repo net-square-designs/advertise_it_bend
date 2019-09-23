@@ -71,4 +71,24 @@ productRouter.post(
   ProductController.bookmarkProduct,
 );
 
+/**
+ * bookmark a product
+ */
+productRouter.post(
+  '/:productId/publish',
+  checkUserAuth,
+  validateProductParams,
+  ProductController.publishProduct,
+);
+
+/**
+ * bookmark a product
+ */
+productRouter.post(
+  '/:productId/unpublish',
+  checkUserAuth,
+  validateProductParams,
+  ProductController.unPublishProduct,
+);
+
 export default productRouter;
