@@ -12,6 +12,7 @@ const {
   ProductView,
   ProductLike,
   ProductBookmark,
+  Follower,
 } = model;
 
 /**
@@ -69,6 +70,13 @@ class Repository {
    */
   static get ProductBookmark() {
     return ProductBookmark;
+  }
+
+  /**
+   * @type {Model}
+   */
+  static get Follower() {
+    return Follower;
   }
 }
 
