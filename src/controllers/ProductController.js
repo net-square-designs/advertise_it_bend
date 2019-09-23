@@ -102,7 +102,7 @@ class ProductController {
   }
 
   /**
-   * @description controller method to fetch products
+   * @description controller method to fetch paginated products
    * @param {*} req req
    * @param {*} res res
    *
@@ -130,7 +130,7 @@ class ProductController {
   }
 
   /**
-   * @description controller method to fetch products
+   * @description controller method to fetch a product
    * @param {*} req req
    * @param {*} res res
    *
@@ -149,6 +149,31 @@ class ProductController {
       }
 
       return AppResponse.notFound(res, { message: 'Product not found' });
+    } catch (errors) {
+      return AppResponse.serverError(res, { errors });
+    }
+  }
+
+  /**
+   * @description controller method to like a product
+   * @param {*} req req
+   * @param {*} res res
+   *
+   * @returns {Promise<AppResponse>} The Return Object
+   */
+  static async likeProduct(req, res) {
+    const { productId } = req.params;
+    const { id } = res.locals.user;
+
+    try {
+      const product = await ProductRepo.getById(productId);
+
+      if (!product) {
+        return AppResponse.notFound(res, { message: 'Product not found' });
+      }
+
+      ProductRepo.addLike({ productId, likerId: id });
+      return AppResponse.success(res, { message: 'Product liked' });
     } catch (errors) {
       return AppResponse.serverError(res, { errors });
     }

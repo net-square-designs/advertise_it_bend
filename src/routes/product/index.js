@@ -42,4 +42,13 @@ productRouter.get('/', ProductController.fetchProducts);
  */
 productRouter.get('/:productId', tryUserAuth, ProductController.fetchOne);
 
+/**
+ * like a product
+ */
+productRouter.post(
+  '/:productId/like',
+  checkUserAuth,
+  ProductController.likeProduct,
+);
+
 export default productRouter;
