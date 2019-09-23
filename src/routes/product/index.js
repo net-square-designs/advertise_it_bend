@@ -7,7 +7,10 @@ import ProductController from '../../controllers/ProductController';
 import { checkUserAuth, tryUserAuth } from '../../middlewares/auth';
 
 // Validations
-import { validateCreateProduct } from './productValidations';
+import {
+  validateCreateProduct,
+  validateProductParams,
+} from './productValidations';
 import { validateCreateProductImages } from '../productImage/productImageValidations';
 
 const productRouter = express.Router();
@@ -29,6 +32,7 @@ productRouter.post(
   '/:productId/images',
   checkUserAuth,
   validateCreateProductImages,
+  validateProductParams,
   ProductController.addImages,
 );
 
@@ -40,7 +44,12 @@ productRouter.get('/', ProductController.fetchProducts);
 /**
  * fetch one product
  */
-productRouter.get('/:productId', tryUserAuth, ProductController.fetchOne);
+productRouter.get(
+  '/:productId',
+  tryUserAuth,
+  validateProductParams,
+  ProductController.fetchOne,
+);
 
 /**
  * like a product
@@ -48,7 +57,18 @@ productRouter.get('/:productId', tryUserAuth, ProductController.fetchOne);
 productRouter.post(
   '/:productId/like',
   checkUserAuth,
+  validateProductParams,
   ProductController.likeProduct,
+);
+
+/**
+ * bookmark a product
+ */
+productRouter.post(
+  '/:productId/bookmark',
+  checkUserAuth,
+  validateProductParams,
+  ProductController.bookmarkProduct,
 );
 
 export default productRouter;

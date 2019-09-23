@@ -24,6 +24,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'productId',
       as: 'ProductLikes',
     });
+    Product.hasMany(models.ProductBookmark, {
+      foreignKey: 'productId',
+      as: 'ProductBookmarks',
+    });
   };
   return Product;
 };

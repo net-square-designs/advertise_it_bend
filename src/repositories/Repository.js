@@ -11,6 +11,7 @@ const {
   ProductImage,
   ProductView,
   ProductLike,
+  ProductBookmark,
 } = model;
 
 /**
@@ -61,6 +62,13 @@ class Repository {
    */
   static get ProductLike() {
     return ProductLike;
+  }
+
+  /**
+   * @type {Model}
+   */
+  static get ProductBookmark() {
+    return ProductBookmark;
   }
 }
 
