@@ -9,7 +9,7 @@ import Repository from './Repository';
 class ProductImageRepo extends Repository {
   /**
    * @typedef {{
-   *  image: string, isMainImage: string, productId: string
+   *  image: string, isMainImage: boolean, productId: string
    * }} createData
    */
 

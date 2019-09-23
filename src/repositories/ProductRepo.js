@@ -181,19 +181,27 @@ class ProductRepo extends Repository {
    *
    * @param {{ likerId: number, productId: number }} data
    *
-   * @returns {Promise<*>} Response
+   * @returns {Promise<void>} Response
    */
   static async addLike(data) {
     const { productId, likerId } = data;
 
-    const product = this.ProductLike.create({
+    const isAlreadyLiked = await this.ProductLike.findOne({
+      where: {
+        [Op.and]: [{ productId }, { likerId }],
+      },
+    });
+
+    if (isAlreadyLiked) {
+      return;
+    }
+
+    this.ProductLike.create({
       productId,
       likerId,
     }).catch((error) => {
       throw new Error(error);
     });
-
-    return product;
   }
 }
 
