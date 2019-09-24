@@ -41,7 +41,7 @@ const seedUser = () => new Promise(() => {
         faker.internet.password().trim(),
       );
 
-      const superAdmin = await User.create(
+      const createdUser = await User.create(
         {
           email,
           uniqueId: generateUniqueId(),
@@ -59,11 +59,13 @@ const seedUser = () => new Promise(() => {
       count += 1;
 
       const token = process.env.NODE_ENV !== 'production'
-        ? generateUserAuthToken(superAdmin)
+        ? generateUserAuthToken(createdUser)
         : '';
 
-      process.stdout.write(`${count} Users seeded successfully \n`);
-      return process.stdout.write(`${token} \n \n`);
+      if (count >= 38) {
+        process.stdout.write(`${count} Users seeded successfully \n`);
+        process.stdout.write(`${token} \n \n`);
+      }
     });
   } catch (error) {
     console.log(error);

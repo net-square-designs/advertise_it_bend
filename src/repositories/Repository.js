@@ -13,6 +13,7 @@ const {
   ProductLike,
   ProductBookmark,
   Follower,
+  Admin,
 } = model;
 
 /**
@@ -28,6 +29,13 @@ class Repository {
    */
   static get User() {
     return User;
+  }
+
+  /**
+   * @type {Model}
+   */
+  static get Admin() {
+    return Admin;
   }
 
   /**
