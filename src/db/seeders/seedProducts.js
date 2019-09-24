@@ -35,9 +35,11 @@ const seedProducts = () => new Promise(() => {
 
       await ProductImageRepo.createMany(images);
 
-      return process.stdout.write(
-        `${count} Products seeded successfully \n`,
-      );
+      if (count >= 25) {
+        return process.stdout.write(
+          `${count} Products seeded successfully \n`,
+        );
+      }
     });
   } catch (error) {
     console.log(error);

@@ -22,8 +22,9 @@ export default (sequelize, DataTypes) => {
       nationality: DataTypes.STRING,
       stateOfOrigin: DataTypes.STRING,
       stateOfResidence: DataTypes.STRING,
-      userType: DataTypes.STRING,
+      isAdmin: DataTypes.BOOLEAN,
       userId: DataTypes.STRING,
+      // adminId: DataTypes.STRING,
     },
     {},
   );
@@ -33,6 +34,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });
+    // Profile.belongsTo(models.Admin, {
+    //   foreignKey: 'adminId',
+    //   onDelete: 'CASCADE',
+    // });
   };
   return Profile;
 };

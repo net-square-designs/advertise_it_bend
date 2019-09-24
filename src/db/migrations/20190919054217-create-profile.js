@@ -39,8 +39,8 @@ module.exports = {
     stateOfResidence: {
       type: Sequelize.STRING,
     },
-    userType: {
-      type: Sequelize.STRING,
+    isAdmin: {
+      type: Sequelize.BOOLEAN,
     },
     userId: {
       type: Sequelize.INTEGER,

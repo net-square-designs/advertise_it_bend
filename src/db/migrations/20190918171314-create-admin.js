@@ -9,9 +9,6 @@ module.exports = {
     uniqueId: {
       type: Sequelize.STRING,
     },
-    fullname: {
-      type: Sequelize.STRING,
-    },
     phone: {
       type: Sequelize.STRING,
     },
@@ -36,5 +33,5 @@ module.exports = {
       type: Sequelize.DATE,
     },
   }),
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('Admins'),
+  down: queryInterface => queryInterface.dropTable('Admins'),
 };

@@ -43,18 +43,17 @@ const seedSuperAdmin = () => new Promise((resolve) => {
 
       const superAdmin = await Admin.create({
         uniqueId: generateUniqueId(),
-        fullname: `${SU_FIRSTNAME} ${SU_LASTNAME}`,
         phone: SU_PHONE,
         email: SU_EMAIL,
         password: hashedPassword,
+        secretKey: `${generateUniqueId()}-${SU_EMAIL}`,
         level: 'SuperAdmin',
-        secreteKey: `${generateUniqueId()}-${SU_EMAIL}`,
       });
 
       const token = process.env.NODE_ENV !== 'production'
         ? generateAdminAuthToken(superAdmin)
         : '';
-      return resolve(console.log(token, '\n'));
+      return resolve(console.log('SuperAdmin Token:::\n', token, '\n'));
     });
   } catch (error) {
     console.log(error);

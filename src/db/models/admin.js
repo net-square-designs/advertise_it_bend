@@ -3,17 +3,20 @@ export default (sequelize, DataTypes) => {
     'Admin',
     {
       uniqueId: DataTypes.STRING,
-      fullname: DataTypes.STRING,
       phone: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      level: DataTypes.STRING,
       secretKey: DataTypes.STRING,
+      level: DataTypes.STRING,
     },
     {},
   );
   Admin.associate = (models) => {
     // associations can be defined here
+    // Admin.hasOne(models.Profile, {
+    //   foreignKey: 'adminId',
+    //   as: 'Profile',
+    // });
   };
   return Admin;
 };
