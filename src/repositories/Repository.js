@@ -14,6 +14,7 @@ const {
   ProductBookmark,
   Follower,
   Admin,
+  PromoterRequest,
 } = model;
 
 /**
@@ -85,6 +86,13 @@ class Repository {
    */
   static get Follower() {
     return Follower;
+  }
+
+  /**
+   * @type {Model}
+   */
+  static get PromoterRequest() {
+    return PromoterRequest;
   }
 }
 

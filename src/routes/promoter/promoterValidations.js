@@ -1,13 +1,13 @@
 import formatJoiErrors from '../../utils/formatJoiErrors';
-import UserSchema from './UserSchema';
+import PromoterSchema from './PromoterSchema';
 import { AppResponse } from '../../helpers/AppResponse';
 
-const { userParams } = UserSchema;
+const { promoterParams } = PromoterSchema;
 
-const validateUserParams = async (req, res, next) => {
+const validatePromoterParams = async (req, res, next) => {
   try {
     // @ts-ignore
-    await userParams.validateAsync(req.params, {
+    await promoterParams.validateAsync(req.params, {
       abortEarly: false,
     });
     return next();
@@ -18,4 +18,4 @@ const validateUserParams = async (req, res, next) => {
   }
 };
 
-export { validateUserParams };
+export { validatePromoterParams };
