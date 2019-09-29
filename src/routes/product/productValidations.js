@@ -4,7 +4,7 @@ import { AppResponse } from '../../helpers/AppResponse';
 
 // import { numberify } from '../../utils/objectHelper';
 
-const { createProduct, productParams } = ProductSchema;
+const { createProduct, productParams, productQuery } = ProductSchema;
 
 const validateCreateProduct = async (req, res, next) => {
   try {
@@ -34,4 +34,22 @@ const validateProductParams = async (req, res, next) => {
   }
 };
 
-export { validateCreateProduct, validateProductParams };
+const validateProductQuery = async (req, res, next) => {
+  try {
+    // @ts-ignore
+    await productQuery.validateAsync(req.query, {
+      abortEarly: false,
+    });
+    return next();
+  } catch (errors) {
+    return AppResponse.badRequest(res, {
+      errors: formatJoiErrors(errors),
+    });
+  }
+};
+
+export {
+  validateCreateProduct,
+  validateProductParams,
+  validateProductQuery,
+};

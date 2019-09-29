@@ -35,6 +35,17 @@ class ProductSchema {
       productId: Joi.number().integer(),
     });
   }
+
+  /**
+   * @description The schema used to validate the product query
+   */
+  static get productQuery() {
+    return Joi.object({
+      name: Joi.string()
+        .min(2)
+        .required(),
+    });
+  }
 }
 
 export default ProductSchema;

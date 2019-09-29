@@ -112,6 +112,69 @@ class ProductRepo extends Repository {
   }
 
   /**
+   * @description Method to get products matching a specific search criteria
+   * @param {Function} usePagination
+   * @param {{name: string}} name
+   *
+   * @returns {Promise<*>} Response
+   */
+  static async search(usePagination, { name }) {
+    const products = await this.Product.findAll({
+      ...usePagination(),
+      where: {
+        [Op.or]: [
+          {
+            title: {
+              [Op.iLike]: `%${name}%`,
+            },
+          },
+          {
+            description: {
+              [Op.iLike]: `%${name}%`,
+            },
+          },
+        ],
+      },
+      include: [{ model: this.ProductImage, as: 'ProductImages' }],
+    }).catch((error) => {
+      throw new Error(error);
+    });
+
+    return products;
+  }
+
+  /**
+   * @description Method to count products matching a specific search criteria
+   * @param {Function} usePagination
+   * @param {{name: string}} name
+   *
+   * @returns {Promise<*>} Response
+   */
+  static async countSearch(usePagination, { name }) {
+    const products = await this.Product.count({
+      ...usePagination(),
+      where: {
+        [Op.or]: [
+          {
+            title: {
+              [Op.iLike]: `%${name}%`,
+            },
+          },
+          {
+            description: {
+              [Op.iLike]: `%${name}%`,
+            },
+          },
+        ],
+      },
+    }).catch((error) => {
+      throw new Error(error);
+    });
+
+    return products;
+  }
+
+  /**
    * @description Method to count products
    * @param {{isPublished: boolean}} data
    *

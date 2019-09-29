@@ -10,6 +10,7 @@ import { checkUserAuth, tryUserAuth } from '../../middlewares/auth';
 import {
   validateCreateProduct,
   validateProductParams,
+  validateProductQuery,
 } from './productValidations';
 import { validateCreateProductImages } from '../productImage/productImageValidations';
 
@@ -40,6 +41,15 @@ productRouter.post(
  * fetch products
  */
 productRouter.get('/', ProductController.fetchProducts);
+
+/**
+ * search products
+ */
+productRouter.get(
+  '/search',
+  validateProductQuery,
+  ProductController.searchProducts,
+);
 
 /**
  * fetch one product

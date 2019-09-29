@@ -145,6 +145,40 @@ class ProductController {
   }
 
   /**
+   * @description controller method to fetch paginated products
+   * @param {*} req req
+   * @param {*} res res
+   *
+   * @returns {Promise<AppResponse>} The Return Object
+   */
+  static async searchProducts(req, res) {
+    const { usePagination, paginationData } = res.locals;
+    const { name } = req.query;
+
+    try {
+      const countProducts = () => ProductRepo.countSearch(usePagination, { name });
+      const getProducts = () => ProductRepo.search(usePagination, { name });
+
+      const [count, products] = await Promise.all([
+        countProducts(),
+        getProducts(),
+      ]);
+
+      if (count === 0) {
+        return AppResponse.notFound(res, {
+          message: 'No products match the search criteria',
+        });
+      }
+
+      const metaData = { count, ...paginationData };
+
+      return AppResponse.success(res, { data: { products, metaData } });
+    } catch (errors) {
+      return AppResponse.serverError(res, { errors });
+    }
+  }
+
+  /**
    * @description controller method to fetch a product
    * @param {*} req req
    * @param {*} res res
