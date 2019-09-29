@@ -4,6 +4,7 @@ import ProductImageRepo from '../repositories/ProductImageRepo';
 
 // Helpers
 import { AppResponse } from '../helpers/AppResponse';
+import CategoryRepo from '../repositories/CategoryRepo';
 
 /**
  * Controller that handles everything relating to products
@@ -20,6 +21,13 @@ class ProductController {
     const { title, price, description } = req.body;
     const { id } = res.locals.user;
 
+    let name = '';
+    let category = {};
+    if (req.body.categoryName) {
+      name = req.body.categoryName;
+      category = await CategoryRepo.getByName(name);
+    }
+
     try {
       const product = await ProductRepo.getByTitleAndUserId({
         title,
@@ -33,10 +41,17 @@ class ProductController {
         });
       }
 
+      if (!category) {
+        return AppResponse.badRequest(res, {
+          message: 'There is no category matching this category name',
+        });
+      }
+
       const newProduct = await ProductRepo.create({
         title,
         price,
         description,
+        categoryId: category.id,
         userId: id,
       });
 
