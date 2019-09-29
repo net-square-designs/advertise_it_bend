@@ -3,7 +3,10 @@ export default (sequelize, DataTypes) => {
     'ProductImage',
     {
       image: DataTypes.STRING,
-      isMainImage: DataTypes.BOOLEAN,
+      isMainImage: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       productId: DataTypes.INTEGER,
     },
     {},

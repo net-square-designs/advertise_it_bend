@@ -20,11 +20,16 @@ module.exports = {
     },
     uniqueId: {
       type: Sequelize.STRING,
+      unique: true,
+      allowNull: false,
     },
     secretKey: {
       type: Sequelize.STRING,
     },
     accountType: {
+      type: Sequelize.STRING,
+    },
+    authType: {
       type: Sequelize.STRING,
     },
     createdAt: {
@@ -36,5 +41,5 @@ module.exports = {
       type: Sequelize.DATE,
     },
   }),
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('Users'),
+  down: queryInterface => queryInterface.dropTable('Users'),
 };

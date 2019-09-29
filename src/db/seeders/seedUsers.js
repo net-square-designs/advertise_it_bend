@@ -7,12 +7,13 @@ import model from '../models';
 import { generateUserAuthToken } from '../../helpers/generateAuthToken';
 import generateUniqueId from '../../helpers/generateUniqueId';
 import { hashPassword } from '../../helpers/passwordHelpers';
+import UserRepo from '../../repositories/UserRepo';
 
 const { Op } = Sequelize;
 
 dotenv.config();
 
-const { User, Profile } = model;
+const { User } = model;
 faker.seed(555);
 
 const seedUser = () => new Promise(() => {
@@ -21,7 +22,7 @@ const seedUser = () => new Promise(() => {
     times(40, async () => {
       const firstname = faker.name.firstName();
       const lastname = faker.name.lastName();
-      const middlename = faker.name.lastName();
+      // const middlename = faker.name.lastName();
       const email = faker.internet.email(firstname, lastname);
 
       const user = await User.findOne({
@@ -41,21 +42,19 @@ const seedUser = () => new Promise(() => {
         faker.internet.password().trim(),
       );
 
-      const createdUser = await User.create(
-        {
-          email,
-          uniqueId: generateUniqueId(),
-          phone: faker.phone.phoneNumber(),
-          password: hashedPassword,
-          secretKey: `${generateUniqueId()}-${email}`,
-          Profile: {
-            firstname,
-            lastname,
-            middlename,
-          },
+      const createdUser = await UserRepo.create({
+        email,
+        uniqueId: generateUniqueId(),
+        phone: faker.phone.phoneNumber(),
+        password: hashedPassword,
+        secretKey: `${generateUniqueId()}-${email}`,
+        authType: 'Facebook',
+        accountType: 'Customer',
+        userProfile: {
+          firstname,
+          lastname,
         },
-        { include: [{ model: Profile, as: 'Profile' }] },
-      );
+      });
       count += 1;
 
       const token = process.env.NODE_ENV !== 'production'

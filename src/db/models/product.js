@@ -5,7 +5,10 @@ export default (sequelize, DataTypes) => {
       title: DataTypes.STRING,
       price: DataTypes.DECIMAL,
       description: DataTypes.TEXT,
-      isPublished: DataTypes.BOOLEAN,
+      isPublished: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       userId: DataTypes.INTEGER,
     },
     {},

@@ -22,7 +22,10 @@ export default (sequelize, DataTypes) => {
       nationality: DataTypes.STRING,
       stateOfOrigin: DataTypes.STRING,
       stateOfResidence: DataTypes.STRING,
-      isAdmin: DataTypes.BOOLEAN,
+      isAdmin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       userId: DataTypes.STRING,
       // adminId: DataTypes.STRING,
     },

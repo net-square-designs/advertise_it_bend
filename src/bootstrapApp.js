@@ -12,11 +12,14 @@ import appRoutes from './routes';
 
 // middlewares
 import { usePagination } from './middlewares/pagination';
+import { configurePassport } from './middlewares/passport';
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
 });
+
+configurePassport();
 
 const bootstrapApp = async (app) => {
   app.use(cors());

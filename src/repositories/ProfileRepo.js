@@ -11,7 +11,7 @@ class ProfileRepo extends Repository {
    * @typedef {{
    *  uniqueId: string, email: string, password: string,
    *  phone: string, secretKey: string, accountType: string,
-   *  userProfile: { firtstname: string, lastname: string }
+   *  userProfile: { firstname: string, lastname: string }
    * }} createData
    */
 

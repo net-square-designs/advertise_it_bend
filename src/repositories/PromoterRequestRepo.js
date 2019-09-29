@@ -8,14 +8,6 @@ const { Op } = Sequelize;
  */
 class PromoterRequestRepo extends Repository {
   /**
-   * @typedef {{
-   *  uniqueId: string, email: string, password: string,
-   *  phone: string, secretKey: string, accountType: string,
-   *  userProfile: { firtstname: string, lastname: string }
-   * }} createData
-   */
-
-  /**
    * @description Method to get a PromoterRequest by userId
    * @param {string} userId
    *

@@ -3,7 +3,10 @@ export default (sequelize, DataTypes) => {
     'PromoterRequest',
     {
       userId: DataTypes.INTEGER,
-      status: DataTypes.STRING,
+      status: {
+        type: DataTypes.STRING,
+        defaultValue: 'Pending',
+      },
       facebookUrl: DataTypes.STRING,
       twitterUrl: DataTypes.STRING,
       instagramUrl: DataTypes.STRING,
