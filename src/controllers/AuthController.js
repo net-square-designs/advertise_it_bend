@@ -46,7 +46,7 @@ class AuthController {
         password: hashedPassword,
         secretKey: `${generateUniqueId()}-${email}`,
         accountType,
-        userProfile: { firtstname: firstName, lastname: lastName },
+        userProfile: { firstname: firstName, lastname: lastName },
       });
 
       const token = generateUserAuthToken(setupTokenData(newUser));
@@ -140,6 +140,32 @@ class AuthController {
 
       return AppResponse.success(res, {
         message: 'Password updated successfully',
+      });
+    } catch (errors) {
+      return AppResponse.serverError(res, { errors });
+    }
+  }
+
+  /**
+   * @description controller method to authenticate a user
+   * @param {*} req re
+   * @param {*} res res
+   *
+   * @returns {Promise<AppResponse>} The Return Object
+   */
+  static async facebookAuth(req, res) {
+    try {
+      if (!req.user) {
+        return AppResponse.unAuthorized(res, {
+          message: 'User facebook credentials',
+        });
+      }
+      const { user } = req;
+      const token = generateUserAuthToken(setupTokenData(user));
+
+      return AppResponse.success(res, {
+        message: 'Authenticated user via facebook successfully',
+        data: { token },
       });
     } catch (errors) {
       return AppResponse.serverError(res, { errors });

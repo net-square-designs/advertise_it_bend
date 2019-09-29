@@ -1,4 +1,7 @@
 import express from 'express';
+import passport from 'passport';
+
+// Controllers
 import AuthController from '../../controllers/AuthController';
 import {
   validateCreateUser,
@@ -28,6 +31,15 @@ authRouter.put(
   '/reset-password/:resetId',
   validateResetPassword,
   AuthController.resetUserPassword,
+);
+
+/**
+ * facebook auth
+ */
+authRouter.post(
+  '/facebook',
+  passport.authenticate('facebook-token', { session: false }),
+  AuthController.facebookAuth,
 );
 
 export default authRouter;

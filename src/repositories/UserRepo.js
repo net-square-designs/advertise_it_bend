@@ -11,12 +11,13 @@ class UserRepo extends Repository {
    * @typedef {{
    *  uniqueId: string, email: string, password: string,
    *  phone: string, secretKey: string, accountType: string,
-   *  userProfile: { firtstname: string, lastname: string }
+   *  userProfile: { firstname: string, lastname: string },
+   *  authType?: string,
    * }} createData
    */
 
   /**
-   *
+   * @description Get a user by either email or phone
    * @param {Object} data
    * @property {string} email
    * @property {string} phone
@@ -75,14 +76,19 @@ class UserRepo extends Repository {
   }
 
   /**
-   *
+   * @description Method to create a new user
    * @param {createData} data
-   * @property {string} email
-   * @property {string} phone
    *
    * @returns {Promise<*>} Response
    */
   static async create(data) {
+    const getAuthType = () => {
+      if (data.authType) {
+        return { authType: data.authType };
+      }
+      return null;
+    };
+
     const {
       uniqueId,
       email,
@@ -101,6 +107,7 @@ class UserRepo extends Repository {
         secretKey,
         accountType,
         password,
+        ...getAuthType(),
         Profile: userProfile,
       },
       {
