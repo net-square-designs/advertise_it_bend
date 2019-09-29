@@ -4,6 +4,7 @@ import profileRouter from './profile';
 import productRouter from './product';
 import followRouter from './follow';
 import promoterRouter from './promoter';
+import categoryRouter from './category';
 
 const router = express.Router();
 
@@ -12,5 +13,6 @@ router.use('/profile', profileRouter);
 router.use('/product', productRouter);
 router.use('/follow', followRouter);
 router.use('/promoter', promoterRouter);
+router.use('/category', categoryRouter);
 
 export default router;

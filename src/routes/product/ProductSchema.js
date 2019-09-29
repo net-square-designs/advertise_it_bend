@@ -21,6 +21,9 @@ class ProductSchema {
         .min(3)
         .max(200)
         .required(),
+      categoryName: Joi.string()
+        .min(3)
+        .max(200),
     });
   }
 

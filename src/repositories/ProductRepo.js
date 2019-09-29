@@ -11,6 +11,7 @@ class ProductRepo extends Repository {
    * @typedef {{
    *  title: string, price: string,
    *  description: string, userId: number,
+   *  categoryId: number?,
    * }} createData
    */
 
@@ -134,7 +135,7 @@ class ProductRepo extends Repository {
    */
   static async create(data) {
     const {
-      title, price, description, userId,
+      title, price, description, userId, categoryId = null,
     } = data;
 
     const product = this.Product.create({
@@ -142,6 +143,7 @@ class ProductRepo extends Repository {
       price,
       description,
       userId,
+      categoryId,
       isPublished: false,
     }).catch((error) => {
       throw new Error(error);
