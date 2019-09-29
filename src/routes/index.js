@@ -5,6 +5,8 @@ import productRouter from './product';
 import followRouter from './follow';
 import promoterRouter from './promoter';
 import categoryRouter from './category';
+import chatRouter from './chat';
+import messageRouter from './message';
 
 const router = express.Router();
 
@@ -14,5 +16,7 @@ router.use('/product', productRouter);
 router.use('/follow', followRouter);
 router.use('/promoter', promoterRouter);
 router.use('/category', categoryRouter);
+router.use('/chat', chatRouter);
+router.use('/message', messageRouter);
 
 export default router;
