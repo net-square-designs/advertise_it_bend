@@ -35,7 +35,7 @@ export default (sequelize, DataTypes) => {
     // associations can be defined here
     Profile.belongsTo(models.User, {
       foreignKey: 'userId',
-      onDelete: 'CASCADE',
+      // onDelete: 'CASCADE',
     });
     // Profile.belongsTo(models.Admin, {
     //   foreignKey: 'adminId',

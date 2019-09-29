@@ -15,6 +15,7 @@ const {
   Follower,
   Admin,
   PromoterRequest,
+  Category,
 } = model;
 
 /**
@@ -93,6 +94,13 @@ class Repository {
    */
   static get PromoterRequest() {
     return PromoterRequest;
+  }
+
+  /**
+   * @type {Model}
+   */
+  static get Category() {
+    return Category;
   }
 }
 

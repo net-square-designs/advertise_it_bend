@@ -43,7 +43,8 @@ const seedProducts = () => new Promise(() => {
     });
   } catch (error) {
     console.log(error);
-    process.exit();
+    throw error;
+    // process.exit();
   }
 });
 

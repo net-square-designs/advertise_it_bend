@@ -10,6 +10,7 @@ export default (sequelize, DataTypes) => {
         defaultValue: false,
       },
       userId: DataTypes.INTEGER,
+      categoryId: DataTypes.INTEGER,
     },
     {},
   );
@@ -30,6 +31,9 @@ export default (sequelize, DataTypes) => {
     Product.hasMany(models.ProductBookmark, {
       foreignKey: 'productId',
       as: 'ProductBookmarks',
+    });
+    Product.belongsTo(models.Category, {
+      foreignKey: 'categoryId',
     });
   };
   return Product;

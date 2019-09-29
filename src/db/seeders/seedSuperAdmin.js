@@ -57,7 +57,8 @@ const seedSuperAdmin = () => new Promise((resolve) => {
     });
   } catch (error) {
     console.log(error);
-    process.exit();
+    throw error;
+    // process.exit();
   }
 });
 
