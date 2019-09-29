@@ -31,6 +31,14 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'Followers',
     });
+    User.hasMany(models.Message, {
+      foreignKey: 'senderId',
+      as: 'SentMessages',
+    });
+    User.hasMany(models.Message, {
+      foreignKey: 'receiverId',
+      as: 'ReceivedMessages',
+    });
   };
   return User;
 };

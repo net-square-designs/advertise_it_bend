@@ -16,6 +16,8 @@ const {
   Admin,
   PromoterRequest,
   Category,
+  Message,
+  Chat,
 } = model;
 
 /**
@@ -101,6 +103,20 @@ class Repository {
    */
   static get Category() {
     return Category;
+  }
+
+  /**
+   * @type {Model}
+   */
+  static get Message() {
+    return Message;
+  }
+
+  /**
+   * @type {Model}
+   */
+  static get Chat() {
+    return Chat;
   }
 }
 
