@@ -14,14 +14,13 @@ class AuthSchema {
         .email()
         .required(),
       password: Joi.string().required(),
-      firtsname: Joi.string()
+      firstName: Joi.string()
         .min(3)
         .max(15)
         .required(),
-      lastname: Joi.string()
+      lastName: Joi.string()
         .min(3)
-        .max(15)
-        .required(),
+        .max(15),
       phone: Joi.string()
         .length(11)
         .required(),

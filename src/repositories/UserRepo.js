@@ -11,7 +11,7 @@ class UserRepo extends Repository {
    * @typedef {{
    *  uniqueId: string, email: string, password: string,
    *  phone: string, secretKey: string, accountType: string,
-   *  userProfile: { firstname: string, lastname: string },
+   *  userProfile: { firstName: string, lastName: string, image?: string, bio?: string },
    *  authType?: string,
    * }} createData
    */

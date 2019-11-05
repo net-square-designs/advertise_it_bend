@@ -2,9 +2,15 @@ const formatJoiErrors = (errors) => {
   const { details } = errors;
   const detailsArray = [];
 
+  const detailsObject = {};
+
   if (details) {
     details.map((detail) => {
       const { message, path } = detail;
+
+      if (!detailsObject[path]) {
+        detailsObject[path] = message.replace(/"/gi, '');
+      }
 
       return detailsArray.push({
         message: message.replace(/"/gi, ''),
@@ -12,9 +18,12 @@ const formatJoiErrors = (errors) => {
       });
     });
 
-    return { details: detailsArray };
+    return { detailsArray, detailsObject };
   }
-  return { details: errors.toString() };
+  return {
+    detailsArray: errors.toString(),
+    detailsObject: errors.toString(),
+  };
 };
 
 export default formatJoiErrors;

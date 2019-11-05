@@ -20,10 +20,11 @@ const seedUser = () => new Promise(() => {
   try {
     let count = 0;
     times(40, async () => {
-      const firstname = faker.name.firstName();
-      const lastname = faker.name.lastName();
-      // const middlename = faker.name.lastName();
-      const email = faker.internet.email(firstname, lastname);
+      const firstName = faker.name.firstName();
+      const lastName = faker.name.lastName();
+      const email = faker.internet.email(firstName, lastName);
+      const image = faker.image.avatar();
+      const bio = faker.lorem.paragraph(1);
 
       const user = await User.findOne({
         where: {
@@ -38,9 +39,7 @@ const seedUser = () => new Promise(() => {
         return process.stdout.write(`${message} '\n'`);
       }
 
-      const hashedPassword = hashPassword(
-        faker.internet.password().trim(),
-      );
+      const hashedPassword = hashPassword('12345');
 
       const createdUser = await UserRepo.create({
         email,
@@ -51,8 +50,10 @@ const seedUser = () => new Promise(() => {
         authType: 'Facebook',
         accountType: 'Customer',
         userProfile: {
-          firstname,
-          lastname,
+          firstName,
+          lastName,
+          image,
+          bio,
         },
       });
       count += 1;
