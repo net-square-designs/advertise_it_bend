@@ -13,6 +13,7 @@ import appRoutes from './routes';
 // middlewares
 import { usePagination } from './middlewares/pagination';
 import { configurePassport } from './middlewares/passport';
+import { useOrdering } from './middlewares/ordering';
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -29,6 +30,7 @@ const bootstrapApp = async (app) => {
   app.use(limiter);
   app.use(setAppResponse);
   app.use(usePagination);
+  app.use(useOrdering);
   app.use(expressip().getIpInfoMiddleware);
   app.enable('trust proxy');
 

@@ -27,9 +27,8 @@ const usePagination = async (req, res, next) => {
     const { page = 1, pageSize = 10 } = numberify(req.query);
 
     const offset = pageSize * (page > 0 ? page - 1 : page);
-    const limit = offset + pageSize;
+    const limit = pageSize;
 
-    res.locals = {};
     res.locals.usePagination = () => ({
       offset,
       limit,
@@ -39,6 +38,8 @@ const usePagination = async (req, res, next) => {
       page,
       pageSize,
     };
+
+    // return;
 
     return next();
   } catch (errors) {

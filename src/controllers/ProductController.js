@@ -119,24 +119,32 @@ class ProductController {
   /**
    * @description controller method to fetch paginated products
    * @param {*} req req
-   * @param {*} res res
+   * @param {{
+   *  locals: { usePagination, paginationData, useOrdering, orderData}
+   * }} res res
    *
    * @returns {Promise<AppResponse>} The Return Object
    */
   static async fetchProducts(req, res) {
-    const { usePagination, paginationData } = res.locals;
+    const { usePagination, paginationData, useOrdering } = res.locals;
     const isPublished = { isPublished: false };
 
     try {
       const countProducts = () => ProductRepo.countProducts(isPublished);
-      const getProducts = () => ProductRepo.getByPagination(usePagination, isPublished);
+      const getProducts = () => ProductRepo.getByPagination(
+        usePagination,
+        useOrdering,
+        isPublished,
+      );
 
       const [count, products] = await Promise.all([
         countProducts(),
         getProducts(),
       ]);
 
-      const metaData = { count, ...paginationData };
+      const totalPages = Math.ceil(count / paginationData.pageSize);
+
+      const metaData = { count, totalPages, ...paginationData };
 
       return AppResponse.success(res, { data: { products, metaData } });
     } catch (errors) {

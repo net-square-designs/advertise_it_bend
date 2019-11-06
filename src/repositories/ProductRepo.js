@@ -95,18 +95,57 @@ class ProductRepo extends Repository {
   /**
    * @description Method to get a product by id and userId
    * @param {Function} usePagination
+   * @param {Function} useOrdering
    * @param {{isPublished: boolean}} isPublished
    *
    * @returns {Promise<*>} Response
    */
-  static async getByPagination(usePagination, { isPublished }) {
+  static async getByPagination(
+    usePagination,
+    useOrdering,
+    { isPublished },
+  ) {
     const products = await this.Product.findAll({
       ...usePagination(),
+      ...useOrdering(),
       where: { [Op.or]: [{ isPublished }] },
       include: [
-        { model: this.ProductImage, as: 'ProductImages' },
-        { model: this.Profile, as: 'Owner' },
+        {
+          model: this.ProductImage,
+          as: 'ProductImages',
+          attributes: ['image'],
+        },
+        {
+          model: this.Profile,
+          as: 'Owner',
+          attributes: ['firstName', 'lastName', 'image', 'userId'],
+        },
+        {
+          model: this.ProductLike,
+          as: 'ProductLikes',
+          attributes: [],
+        },
+        {
+          model: this.ProductView,
+          as: 'ProductViews',
+          attributes: [],
+        },
       ],
+      attributes: {
+        exclude: ['description'],
+        include: [
+          [
+            Sequelize.fn('COUNT', Sequelize.col('ProductLikes.id')),
+            'likes',
+          ],
+          [
+            Sequelize.fn('COUNT', Sequelize.col('ProductViews.id')),
+            'views',
+          ],
+        ],
+      },
+      group: ['Product.id', 'ProductImages.id', 'Owner.id'],
+      subQuery: false,
     }).catch((error) => {
       throw new Error(error);
     });
@@ -192,6 +231,8 @@ class ProductRepo extends Repository {
 
     return count;
   }
+
+  // /**s
 
   /**
    *
