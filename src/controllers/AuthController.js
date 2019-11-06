@@ -25,9 +25,11 @@ class AuthController {
       password,
       phone,
       firstName,
-      lastName,
+      lastName = '',
       accountType,
     } = req.body;
+
+    console.log(req.body);
 
     try {
       const user = await UserRepo.getByEmailOrPhone({ email, phone });
@@ -46,7 +48,7 @@ class AuthController {
         password: hashedPassword,
         secretKey: `${generateUniqueId()}-${email}`,
         accountType,
-        userProfile: { firstname: firstName, lastname: lastName },
+        userProfile: { firstName, lastName },
       });
 
       const token = generateUserAuthToken(setupTokenData(newUser));
@@ -154,6 +156,7 @@ class AuthController {
    * @returns {Promise<AppResponse>} The Return Object
    */
   static async facebookAuth(req, res) {
+    // console.log(req.body);
     try {
       if (!req.user) {
         return AppResponse.unAuthorized(res, {

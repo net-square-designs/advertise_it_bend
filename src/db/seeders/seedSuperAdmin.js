@@ -18,13 +18,7 @@ faker.seed(555);
 const seedSuperAdmin = () => new Promise((resolve) => {
   try {
     times(1, async () => {
-      const {
-        SU_FIRSTNAME,
-        SU_LASTNAME,
-        SU_PASSWORD,
-        SU_PHONE,
-        SU_EMAIL,
-      } = process.env;
+      const { SU_PASSWORD, SU_PHONE, SU_EMAIL } = process.env;
 
       const admin = await Admin.findOne({
         where: {

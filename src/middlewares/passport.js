@@ -26,8 +26,10 @@ const configurePassport = async () => {
          * [3] - Return the existing user
          */
         const email = profile.emails[0].value;
-        const lastname = profile.name.familyName;
-        const firstname = profile.name.familyName;
+        const firstName = profile.name.givenName;
+        const lastName = profile.name.familyName;
+        const { id } = profile;
+        const image = profile.photos[0].value;
 
         const user = await UserRepo.getByEmail(email);
 
@@ -36,21 +38,34 @@ const configurePassport = async () => {
           const newUser = await UserRepo.create({
             email,
             password: '',
-            uniqueId: generateUniqueId(),
+            uniqueId: id,
             secretKey: `${generateUniqueId()}-${email}`,
             phone: '',
             accountType: 'Customer',
             authType: 'Facebook',
             userProfile: {
-              firstname,
-              lastname,
+              firstName,
+              lastName,
+              image,
             },
           });
 
           return done(null, newUser);
         }
+        await user.Profile.set({
+          ...user.Profile,
+          firstName,
+          lastName,
+          image,
+        });
 
-        return done(null, user);
+        const updatedUser = await user.update({
+          email,
+          uniqueId: id,
+          secretKey: `${generateUniqueId()}-${email}`,
+        });
+
+        return done(null, updatedUser);
       },
     ),
   );

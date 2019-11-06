@@ -11,7 +11,7 @@ class ProductRepo extends Repository {
    * @typedef {{
    *  title: string, price: string,
    *  description: string, userId: number,
-   *  categoryId: number?,
+   *  categoryId?: number?,
    * }} createData
    */
 
@@ -103,7 +103,10 @@ class ProductRepo extends Repository {
     const products = await this.Product.findAll({
       ...usePagination(),
       where: { [Op.or]: [{ isPublished }] },
-      include: [{ model: this.ProductImage, as: 'ProductImages' }],
+      include: [
+        { model: this.ProductImage, as: 'ProductImages' },
+        { model: this.Profile, as: 'Owner' },
+      ],
     }).catch((error) => {
       throw new Error(error);
     });

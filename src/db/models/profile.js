@@ -11,9 +11,9 @@ export default (sequelize, DataTypes) => {
   const Profile = sequelize.define(
     'Profile',
     {
-      firstname: DataTypes.STRING,
-      lastname: DataTypes.STRING,
-      middlename: DataTypes.STRING,
+      firstName: DataTypes.STRING,
+      lastName: DataTypes.STRING,
+      middleName: DataTypes.STRING,
       image: DataTypes.STRING,
       bio: DataTypes.TEXT,
       storeName: DataTypes.STRING,

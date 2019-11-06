@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 /**
- * @typedef {{ firstname: string}} Profile
+ * @typedef {Object<string, any>} Profile
  * @typedef {{
  *  id: string, uniqueId: string, email: string, fullname: string
  *  phone: string, level: string, secretKey:string
@@ -24,17 +24,25 @@ const generateUserAuthToken = ({
   id,
   uniqueId,
   email,
-  Profile: { firstname },
+  Profile,
   phone,
   accountType,
   secretKey,
 }) => {
   try {
+    const {
+      isAdmin,
+      userId,
+      id: ID,
+      updatedAt,
+      createdAt,
+      ...rest
+    } = Profile.toJSON();
     return jwt.sign(
       {
         id,
         uniqueId,
-        firstname,
+        Profile: rest,
         email,
         phone,
         accountType,
