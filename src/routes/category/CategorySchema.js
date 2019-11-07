@@ -14,6 +14,9 @@ class CategorySchema {
         .min(3)
         .max(25)
         .required(),
+      image: Joi.string()
+        .min(3)
+        .max(90),
     });
   }
 

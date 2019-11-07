@@ -1,10 +1,8 @@
 // Repos
-import ProductRepo from '../repositories/ProductRepo';
-import ProductImageRepo from '../repositories/ProductImageRepo';
+import CategoryRepo from '../repositories/CategoryRepo';
 
 // Helpers
 import { AppResponse } from '../helpers/AppResponse';
-import CategoryRepo from '../repositories/CategoryRepo';
 
 /**
  * Controller that handles everything relating to products
@@ -18,7 +16,7 @@ class CategoryController {
    * @returns {Promise<AppResponse>} The Return Object
    */
   static async create(req, res) {
-    const { name } = req.body;
+    const { name, image } = req.body;
     // const { id } = res.locals.user || res.locals.admin;
 
     try {
@@ -30,7 +28,7 @@ class CategoryController {
         });
       }
 
-      const newCategory = await CategoryRepo.create({ name });
+      const newCategory = await CategoryRepo.create({ name, image });
 
       return AppResponse.created(res, { data: { newCategory } });
     } catch (errors) {

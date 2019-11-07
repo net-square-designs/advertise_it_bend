@@ -88,15 +88,16 @@ class CategoryRepo extends Repository {
 
   /**
    * @description Add new category
-   * @param {{name: string}} data
+   * @param {{name: string, image: string}} data
    *
    * @returns {Promise<*>} Response
    */
   static async create(data) {
-    const { name } = data;
+    const { name, image } = data;
 
     const category = this.Category.create({
       name,
+      image,
     }).catch((error) => {
       throw new Error(error);
     });
