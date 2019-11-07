@@ -77,11 +77,9 @@ class CategoryRepo extends Repository {
    * @returns {Promise<*>} Response
    */
   static async getAll() {
-    const categories = await this.Product.findAndCountAll({}).catch(
-      (error) => {
-        throw new Error(error);
-      },
-    );
+    const categories = this.Category.findAndCountAll({}).catch((error) => {
+      throw new Error(error);
+    });
 
     return categories;
   }
