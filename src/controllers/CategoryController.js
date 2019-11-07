@@ -45,7 +45,7 @@ class CategoryController {
    */
   static async fetchAllCategories(req, res) {
     try {
-      const categories = CategoryRepo.getAll();
+      const categories = await CategoryRepo.getAll();
 
       return AppResponse.success(res, { data: { categories } });
     } catch (errors) {
