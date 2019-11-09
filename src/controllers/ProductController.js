@@ -1,4 +1,5 @@
 // Repos
+// import { log } from 'util';
 import ProductRepo from '../repositories/ProductRepo';
 import ProductImageRepo from '../repositories/ProductImageRepo';
 
@@ -142,6 +143,9 @@ class ProductController {
         getProducts(),
       ]);
 
+      // products.dataValues.ProductImages = [products.dataValues.ProductImages];
+      // log(products);
+
       const totalPages = Math.ceil(count / paginationData.pageSize);
 
       const metaData = { count, totalPages, ...paginationData };
@@ -198,10 +202,31 @@ class ProductController {
     const { id } = res.locals.user;
 
     try {
-      const product = await ProductRepo.getById(productId);
+      const getProductById = () => ProductRepo.getById(productId);
+      const getProductImageByProductId = () => ProductImageRepo.getByProductId({
+        productId,
+      });
+      const [product, productImage] = await Promise.all([
+        getProductById(),
+        getProductImageByProductId(),
+      ]);
+
+      product.dataValues.ProductImages = productImage;
+      product.dataValues.views = parseInt(product.dataValues.views, 10);
+      product.dataValues.likes = parseInt(product.dataValues.likes, 10);
 
       if (product) {
-        ProductRepo.addView({ productId, viewerId: id.toString() });
+        const add = await ProductRepo.addView({
+          productId,
+          viewerId: id.toString(),
+        });
+
+        if (add) {
+          const newViewCount = 1 + parseInt(product.dataValues.views, 10);
+
+          await product.update({ views: newViewCount });
+        }
+
         return AppResponse.success(res, { data: { product } });
       }
 

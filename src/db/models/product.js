@@ -5,12 +5,20 @@ export default (sequelize, DataTypes) => {
       title: DataTypes.STRING,
       price: DataTypes.DECIMAL,
       description: DataTypes.TEXT,
+      categoryId: DataTypes.INTEGER,
+      userId: DataTypes.INTEGER,
       isPublished: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      userId: DataTypes.INTEGER,
-      categoryId: DataTypes.INTEGER,
+      likes: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
+      views: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
     },
     {},
   );

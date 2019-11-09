@@ -7,8 +7,8 @@ const seedAll = async () => {
   await Promise.all([
     seedSuperAdmin(),
     seedUsers(),
-    seedProducts(),
     seedCategories(),
+    seedProducts(),
   ]);
   process.exit();
 };

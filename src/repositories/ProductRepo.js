@@ -65,7 +65,38 @@ class ProductRepo extends Repository {
       where: {
         [Op.or]: [{ id }],
       },
-      include: [{ model: this.ProductImage, as: 'ProductImages' }],
+      include: [
+        {
+          model: this.Profile,
+          as: 'Owner',
+          attributes: ['firstName', 'lastName', 'image', 'userId'],
+        },
+        {
+          model: this.ProductLike,
+          as: 'ProductLikes',
+          attributes: [],
+        },
+        {
+          model: this.ProductView,
+          as: 'ProductViews',
+          attributes: [],
+        },
+      ],
+      attributes: {
+        exclude: ['description'],
+        include: [
+          [
+            Sequelize.fn('COUNT', Sequelize.col('ProductLikes.id')),
+            'likes',
+          ],
+          [
+            Sequelize.fn('COUNT', Sequelize.col('ProductViews.id')),
+            'views',
+          ],
+        ],
+      },
+      group: ['Product.id', 'Owner.id'],
+      subQuery: false,
     }).catch((error) => {
       throw new Error(error);
     });
@@ -109,16 +140,21 @@ class ProductRepo extends Repository {
       ...usePagination(),
       ...useOrdering(),
       where: { [Op.or]: [{ isPublished }] },
+      // distinct: true,
       include: [
         {
           model: this.ProductImage,
           as: 'ProductImages',
           attributes: ['image'],
+          // duplicating: false,
+          // required: true,
         },
         {
           model: this.Profile,
           as: 'Owner',
           attributes: ['firstName', 'lastName', 'image', 'userId'],
+          // duplicating: false,
+          // required: true,
         },
         {
           model: this.ProductLike,
@@ -134,18 +170,18 @@ class ProductRepo extends Repository {
       attributes: {
         exclude: ['description'],
         include: [
-          [
-            Sequelize.fn('COUNT', Sequelize.col('ProductLikes.id')),
-            'likes',
-          ],
-          [
-            Sequelize.fn('COUNT', Sequelize.col('ProductViews.id')),
-            'views',
-          ],
+          // [
+          //   Sequelize.fn('COUNT', Sequelize.col('ProductLikes.id')),
+          //   'likes',
+          // ],
+          // [
+          //   Sequelize.fn('COUNT', Sequelize.col('ProductViews.id')),
+          //   'views',
+          // ],
         ],
       },
-      group: ['Product.id', 'ProductImages.id', 'Owner.id'],
-      subQuery: false,
+      // group: ['Product.id', 'ProductImages.id', 'Owner.id'],
+      // subQuery: false,
     }).catch((error) => {
       throw new Error(error);
     });
@@ -275,8 +311,15 @@ class ProductRepo extends Repository {
     });
 
     if (isViewedAlready) {
-      return;
+      return null;
     }
+
+    // this.Product.update(
+    //   {
+    //     views: newValue,
+    //   },
+    //   { where: { id: productId } },
+    // );
 
     this.ProductView.create({
       productId,
@@ -284,6 +327,8 @@ class ProductRepo extends Repository {
     }).catch((error) => {
       throw new Error(error);
     });
+
+    return 'added';
   }
 
   /**

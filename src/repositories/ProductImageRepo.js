@@ -1,8 +1,8 @@
-// import Sequelize from 'sequelize';
+import Sequelize from 'sequelize';
 
 import Repository from './Repository';
 
-// const { Op } = Sequelize;
+const { Op } = Sequelize;
 /**
  * User Repo
  */
@@ -27,6 +27,25 @@ class ProductImageRepo extends Repository {
     );
 
     return productImage;
+  }
+
+  /**
+   * @description Method to get a product by title
+   * @typedef {{ productId: string }} data
+   * @param {data} data
+   *
+   * @returns {Promise<*>} Response
+   */
+  static async getByProductId({ productId }) {
+    const product = this.ProductImage.findAll({
+      where: {
+        [Op.and]: [{ productId }],
+      },
+    }).catch((error) => {
+      throw new Error(error);
+    });
+
+    return product;
   }
 }
 
