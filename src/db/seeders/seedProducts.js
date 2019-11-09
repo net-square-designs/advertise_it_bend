@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { log } from 'util';
 import ProductRepo from '../../repositories/ProductRepo';
 import ProductImageRepo from '../../repositories/ProductImageRepo';
+import { randomInt } from '../../utils/randomInt';
 
 dotenv.config();
 faker.seed(555);
@@ -24,30 +25,23 @@ const seedProducts = () => new Promise(() => {
         price,
         description,
         userId,
+        categoryId: randomInt(1, 25),
       });
 
-      const getRandomInt = (min, max) => {
-        const newMin = Math.ceil(min);
-        const newMax = Math.floor(max);
-        return (
-          Math.floor(Math.random() * (newMax - newMin + 1)) + newMin
-        );
-      };
-
-      const imageId = getRandomInt(0, 100);
-      const width = getRandomInt(200, 400);
-      const height = getRandomInt(200, 400);
+      const imageId = () => randomInt(0, 100);
+      const width = randomInt(200, 400);
+      const height = randomInt(200, 400);
       // https://picsum.photos/seed/picsum/200/300
 
-      const images = [
-        {
-          image: `https://picsum.photos/id/${imageId}/${width}/${height}`,
-          isMainImage: faker.random.boolean(),
-          productId: product.id,
-        },
-      ];
+      const numberOfImages = randomInt(2, 4);
 
-      await ProductImageRepo.createMany(images);
+      const imageArray = () => [...Array(numberOfImages)].map((image, index) => ({
+        image: `https://picsum.photos/id/${imageId()}/${width}/${height}`,
+        isMainImage: index === 0,
+        productId: product.id,
+      }));
+
+      await ProductImageRepo.createMany(imageArray());
 
       if (count >= 25) {
         return process.stdout.write(

@@ -21,6 +21,12 @@ module.exports = {
     userId: {
       type: Sequelize.INTEGER,
     },
+    likes: {
+      type: Sequelize.INTEGER,
+    },
+    views: {
+      type: Sequelize.INTEGER,
+    },
     categoryId: {
       type: Sequelize.INTEGER,
       allowNull: true,
