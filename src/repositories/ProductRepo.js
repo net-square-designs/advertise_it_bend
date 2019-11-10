@@ -154,18 +154,18 @@ class ProductRepo extends Repository {
           as: 'Owner',
           attributes: ['firstName', 'lastName', 'image', 'userId'],
           // duplicating: false,
-          // required: true,
+          required: true,
         },
-        {
-          model: this.ProductLike,
-          as: 'ProductLikes',
-          attributes: [],
-        },
-        {
-          model: this.ProductView,
-          as: 'ProductViews',
-          attributes: [],
-        },
+        // {
+        //   model: this.ProductLike,
+        //   as: 'ProductLikes',
+        //   attributes: [],
+        // },
+        // {
+        //   model: this.ProductView,
+        //   as: 'ProductViews',
+        //   attributes: [],
+        // },
       ],
       attributes: {
         exclude: ['description'],

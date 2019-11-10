@@ -1,4 +1,5 @@
 // Repos
+import { log } from 'util';
 import ProductRepo from '../repositories/ProductRepo';
 import ProductImageRepo from '../repositories/ProductImageRepo';
 
@@ -219,6 +220,8 @@ class ProductController {
       ]);
 
       if (product) {
+        // log(product);
+        // return;
         product.dataValues.ProductImages = productImage;
         product.dataValues.views = parseInt(product.dataValues.views, 10);
         product.dataValues.likes = parseInt(product.dataValues.likes, 10);
