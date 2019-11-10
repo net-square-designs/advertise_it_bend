@@ -71,32 +71,32 @@ class ProductRepo extends Repository {
           as: 'Owner',
           attributes: ['firstName', 'lastName', 'image', 'userId'],
         },
-        {
-          model: this.ProductLike,
-          as: 'ProductLikes',
-          attributes: [],
-        },
-        {
-          model: this.ProductView,
-          as: 'ProductViews',
-          attributes: [],
-        },
+        // {
+        //   model: this.ProductLike,
+        //   as: 'ProductLikes',
+        //   attributes: [],
+        // },
+        // {
+        //   model: this.ProductView,
+        //   as: 'ProductViews',
+        //   attributes: [],
+        // },
       ],
       attributes: {
         exclude: ['description'],
         include: [
-          [
-            Sequelize.fn('COUNT', Sequelize.col('ProductLikes.id')),
-            'likes',
-          ],
-          [
-            Sequelize.fn('COUNT', Sequelize.col('ProductViews.id')),
-            'views',
-          ],
+          // [
+          //   Sequelize.fn('COUNT', Sequelize.col('ProductLikes.id')),
+          //   'likesCount',
+          // ],
+          // [
+          //   Sequelize.fn('COUNT', Sequelize.col('ProductViews.id')),
+          //   'views',
+          // ],
         ],
       },
-      group: ['Product.id', 'Owner.id'],
-      subQuery: false,
+      // group: ['Product.id', 'Owner.id'],
+      // subQuery: false,
     }).catch((error) => {
       throw new Error(error);
     });
@@ -335,7 +335,7 @@ class ProductRepo extends Repository {
    *
    * @param {{ likerId: number, productId: number }} data
    *
-   * @returns {Promise<void>} Response
+   * @returns {Promise<any | boolean>} Response
    */
   static async addLike(data) {
     const { productId, likerId } = data;
@@ -347,7 +347,12 @@ class ProductRepo extends Repository {
     });
 
     if (isAlreadyLiked) {
-      return;
+      this.ProductLike.destroy({
+        where: {
+          [Op.and]: [{ productId }, { likerId }],
+        },
+      });
+      return 'unliked';
     }
 
     this.ProductLike.create({
@@ -356,6 +361,8 @@ class ProductRepo extends Repository {
     }).catch((error) => {
       throw new Error(error);
     });
+
+    return 'liked';
   }
 
   /**

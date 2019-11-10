@@ -7,7 +7,7 @@ import { randomInt } from '../../utils/randomInt';
 import CategoryRepo from '../../repositories/CategoryRepo';
 
 dotenv.config();
-faker.seed(555);
+// faker.seed(555);
 
 const seedCategories = () => new Promise(() => {
   try {

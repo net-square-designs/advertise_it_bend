@@ -8,12 +8,13 @@ import ProductImageRepo from '../../repositories/ProductImageRepo';
 import { randomInt } from '../../utils/randomInt';
 
 dotenv.config();
-faker.seed(555);
+// faker.seed(555);
 
 const seedProducts = () => new Promise(() => {
   try {
     let count = 0;
-    times(25, async () => {
+    const number = 75;
+    times(number, async () => {
       count += 1;
       const title = faker.random.words(3);
       const price = faker.finance.amount();
@@ -43,7 +44,7 @@ const seedProducts = () => new Promise(() => {
 
       await ProductImageRepo.createMany(imageArray());
 
-      if (count >= 25) {
+      if (count >= number - 5) {
         return process.stdout.write(
           `${count} Products seeded successfully \n`,
         );

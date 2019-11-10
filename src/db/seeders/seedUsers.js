@@ -3,6 +3,7 @@ import faker from 'faker/locale/en';
 import dotenv from 'dotenv';
 import Sequelize from 'sequelize';
 
+import { log } from 'util';
 import model from '../models';
 import { generateUserAuthToken } from '../../helpers/generateAuthToken';
 import generateUniqueId from '../../helpers/generateUniqueId';
@@ -66,9 +67,11 @@ const seedUser = () => new Promise(() => {
         process.stdout.write(`${count} Users seeded successfully \n`);
         process.stdout.write(`${token} \n \n`);
       }
+      return null;
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
+    log(error);
     throw error;
     // process.exit();
   }
