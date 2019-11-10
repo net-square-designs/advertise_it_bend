@@ -7,6 +7,7 @@ import generateUniqueId from '../helpers/generateUniqueId';
 import { generateUserAuthToken } from '../helpers/generateAuthToken';
 import { setupTokenData, verifyToken } from '../helpers/tokenHelper';
 import { AppResponse } from '../helpers/AppResponse';
+import { trimify } from '../utils/objectHelper';
 
 /**
  * Controller that handles everything relating to auth
@@ -20,6 +21,7 @@ class AuthController {
    * @returns {Promise<AppResponse>} The Return Object
    */
   static async createUser(req, res) {
+    const reqBody = trimify(req.body);
     const {
       email,
       password,
@@ -27,12 +29,13 @@ class AuthController {
       firstName,
       lastName = '',
       accountType,
-    } = req.body;
-
-    console.log(req.body);
+    } = reqBody;
 
     try {
-      const user = await UserRepo.getByEmailOrPhone({ email, phone });
+      const user = await UserRepo.getByEmailOrPhone({
+        email: email.toLowerCase(),
+        phone,
+      });
 
       if (user) {
         return AppResponse.conflict(res, {
@@ -42,11 +45,11 @@ class AuthController {
 
       const hashedPassword = hashPassword(password);
       const newUser = await UserRepo.create({
-        email,
+        email: email.toLowerCase(),
         phone,
         uniqueId: generateUniqueId(),
         password: hashedPassword,
-        secretKey: `${generateUniqueId()}-${email}`,
+        secretKey: `${generateUniqueId()}-${email.toLowerCase()}`,
         accountType,
         userProfile: { firstName, lastName },
       });
@@ -67,10 +70,11 @@ class AuthController {
    * @returns {Promise<AppResponse>} The Return Object
    */
   static async authenticateUser(req, res) {
-    const { email, password } = req.body;
+    const reqBody = trimify(req.body);
+    const { email, password } = reqBody;
 
     try {
-      const user = await UserRepo.getByEmail(email);
+      const user = await UserRepo.getByEmail(email.toLowerCase());
 
       if (!user) {
         return AppResponse.notFound(res, {
@@ -104,7 +108,8 @@ class AuthController {
    * @returns {Promise<AppResponse>} The Return Object
    */
   static async resetUserPassword(req, res) {
-    const { oldPassword, newPassword } = req.body;
+    const reqBody = trimify(req.body);
+    const { oldPassword, newPassword } = reqBody;
     const { resetId } = req.params;
 
     const decodedToken = verifyToken(resetId);

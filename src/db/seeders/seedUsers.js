@@ -23,7 +23,9 @@ const seedUser = () => new Promise(() => {
     times(40, async () => {
       const firstName = faker.name.firstName();
       const lastName = faker.name.lastName();
-      const email = faker.internet.email(firstName, lastName);
+      const email = faker.internet
+        .email(firstName, lastName)
+        .toLowerCase();
       const image = faker.image.avatar();
       const bio = faker.lorem.paragraph(1);
 
