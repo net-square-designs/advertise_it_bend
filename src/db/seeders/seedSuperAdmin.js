@@ -13,7 +13,7 @@ const { Op } = Sequelize;
 dotenv.config();
 
 const { Admin } = model;
-faker.seed(555);
+// faker.seed(555);
 
 const seedSuperAdmin = () => new Promise((resolve) => {
   try {

@@ -1,11 +1,12 @@
 // Repos
-// import { log } from 'util';
 import ProductRepo from '../repositories/ProductRepo';
 import ProductImageRepo from '../repositories/ProductImageRepo';
 
 // Helpers
 import { AppResponse } from '../helpers/AppResponse';
 import CategoryRepo from '../repositories/CategoryRepo';
+import ProductLikeRepo from '../repositories/ProductLikeRepo';
+import FollowerRepo from '../repositories/FollowerRepo';
 
 /**
  * Controller that handles everything relating to products
@@ -206,20 +207,36 @@ class ProductController {
       const getProductImageByProductId = () => ProductImageRepo.getByProductId({
         productId,
       });
-      const [product, productImage] = await Promise.all([
+      const getLikeByUserIdAndProductId = () => ProductLikeRepo.getBylikerIdAndProductId({
+        likerId: id,
+        productId,
+      });
+
+      const [product, productImage, isLikedByUser] = await Promise.all([
         getProductById(),
         getProductImageByProductId(),
+        getLikeByUserIdAndProductId(),
       ]);
 
-      product.dataValues.ProductImages = productImage;
-      product.dataValues.views = parseInt(product.dataValues.views, 10);
-      product.dataValues.likes = parseInt(product.dataValues.likes, 10);
-
       if (product) {
-        const add = await ProductRepo.addView({
+        product.dataValues.ProductImages = productImage;
+        product.dataValues.views = parseInt(product.dataValues.views, 10);
+        product.dataValues.likes = parseInt(product.dataValues.likes, 10);
+
+        const checkFollowing = () => FollowerRepo.checkFollowing({
+          followerId: id,
+          userId: product.Owner.userId,
+        });
+
+        const addView = () => ProductRepo.addView({
           productId,
           viewerId: id.toString(),
         });
+
+        const [add, isFollowing] = await Promise.all([
+          addView(),
+          checkFollowing(),
+        ]);
 
         if (add) {
           const newViewCount = 1 + parseInt(product.dataValues.views, 10);
@@ -227,7 +244,13 @@ class ProductController {
           await product.update({ views: newViewCount });
         }
 
-        return AppResponse.success(res, { data: { product } });
+        return AppResponse.success(res, {
+          data: {
+            product,
+            isLikedByUser: !!isLikedByUser,
+            isFollowing: !!isFollowing,
+          },
+        });
       }
 
       return AppResponse.notFound(res, { message: 'Product not found' });
@@ -254,8 +277,28 @@ class ProductController {
         return AppResponse.notFound(res, { message: 'Product not found' });
       }
 
-      ProductRepo.addLike({ productId, likerId: id });
-      return AppResponse.success(res, { message: 'Product liked' });
+      const likeStatus = await ProductRepo.addLike({
+        productId,
+        likerId: id,
+      });
+
+      let message;
+
+      if (likeStatus === 'liked') {
+        message = 'Product liked';
+        const newLikesCount = 1 + parseInt(product.dataValues.likes, 10);
+        await product.update({ likes: newLikesCount });
+      }
+      if (likeStatus === 'unliked') {
+        message = 'Product unliked';
+        const newLikesCount = parseInt(product.dataValues.likes, 10) - 1;
+        await product.update({ likes: newLikesCount });
+      }
+
+      return AppResponse.success(res, {
+        message,
+        data: { likeStatus },
+      });
     } catch (errors) {
       return AppResponse.serverError(res, { errors });
     }
