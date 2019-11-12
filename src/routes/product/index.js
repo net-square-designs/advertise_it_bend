@@ -11,6 +11,7 @@ import {
   validateCreateProduct,
   validateProductParams,
   validateProductQuery,
+  validateProductImages,
 } from './productValidations';
 import { validateCreateProductImages } from '../productImage/productImageValidations';
 
@@ -22,6 +23,7 @@ const productRouter = express.Router();
 productRouter.post(
   '/',
   checkUserAuth,
+  validateProductImages,
   validateCreateProduct,
   ProductController.create,
 );
