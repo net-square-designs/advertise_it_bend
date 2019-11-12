@@ -1,5 +1,4 @@
 // Repos
-import { log } from 'util';
 import ProductRepo from '../repositories/ProductRepo';
 import ProductImageRepo from '../repositories/ProductImageRepo';
 
@@ -8,6 +7,8 @@ import { AppResponse } from '../helpers/AppResponse';
 import CategoryRepo from '../repositories/CategoryRepo';
 import ProductLikeRepo from '../repositories/ProductLikeRepo';
 import FollowerRepo from '../repositories/FollowerRepo';
+import { imageService } from '../services/imageService';
+import { trimify } from '../utils/objectHelper';
 
 /**
  * Controller that handles everything relating to products
@@ -21,8 +22,10 @@ class ProductController {
    * @returns {Promise<AppResponse>} The Return Object
    */
   static async create(req, res) {
-    const { title, price, description } = req.body;
+    const reqBody = trimify(req.body);
+    const { title, price, description } = reqBody;
     const { id } = res.locals.user;
+    const { imageFiles } = res.locals;
 
     let name = '';
     let category = {};
@@ -50,7 +53,11 @@ class ProductController {
         });
       }
 
-      const newProduct = await ProductRepo.create({
+      const promises = imageFiles.map(image => imageService.uploader.upload(image.path));
+
+      const uploadImages = await Promise.all(promises);
+
+      const createdProduct = await ProductRepo.create({
         title,
         price,
         description,
@@ -58,7 +65,19 @@ class ProductController {
         userId: id,
       });
 
-      return AppResponse.created(res, { data: { newProduct } });
+      const formatImages = uploadImages.map(image => ({
+        image: image.url,
+        isMainImage: false,
+        productId: createdProduct.id,
+      }));
+
+      const productImages = await ProductImageRepo.createMany(
+        formatImages,
+      );
+
+      return AppResponse.created(res, {
+        data: { createdProduct, productImages },
+      });
     } catch (errors) {
       return AppResponse.serverError(res, { errors });
     }

@@ -27,6 +27,32 @@ class ProductImageSchema {
       }),
     };
   }
+
+  /**
+   * @description The schema used to validate the process of authenticating a user
+   */
+  static get productImages() {
+    const kb = 1000;
+    const mb = 1000 * kb;
+    const maxImageSize = 3 * mb;
+    return {
+      files: Joi.array()
+        .items({
+          fieldName: Joi.optional(),
+          path: Joi.string().required(),
+          headers: Joi.optional(),
+          name: Joi.string().required(),
+          originalFilename: Joi.string().required(),
+          type: Joi.string()
+            .valid('image/png', 'image/jpeg')
+            .required(),
+          size: Joi.number().max(maxImageSize),
+        })
+        .min(1)
+        .max(4)
+        .required(),
+    };
+  }
 }
 
 export default ProductImageSchema;

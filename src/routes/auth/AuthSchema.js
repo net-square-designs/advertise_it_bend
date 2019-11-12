@@ -16,7 +16,7 @@ class AuthSchema {
       password: Joi.string().required(),
       firstName: Joi.string()
         .min(3)
-        .max(15)
+        .max(40)
         .required(),
       lastName: Joi.string()
         .min(3)
