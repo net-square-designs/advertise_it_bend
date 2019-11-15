@@ -27,7 +27,7 @@ class ProductRepo extends Repository {
         [Op.or]: [{ title }],
       },
       include: [{ model: this.ProductImage, as: 'ProductImages' }],
-    }).catch((error) => {
+    }).catch(error => {
       throw new Error(error);
     });
 
@@ -47,7 +47,7 @@ class ProductRepo extends Repository {
         [Op.and]: [{ title }, { userId }],
       },
       include: [{ model: this.ProductImage, as: 'ProductImages' }],
-    }).catch((error) => {
+    }).catch(error => {
       throw new Error(error);
     });
 
@@ -97,7 +97,7 @@ class ProductRepo extends Repository {
       },
       // group: ['Product.id', 'Owner.id'],
       // subQuery: false,
-    }).catch((error) => {
+    }).catch(error => {
       throw new Error(error);
     });
 
@@ -116,7 +116,7 @@ class ProductRepo extends Repository {
         [Op.and]: [{ id }, { userId }],
       },
       include: [{ model: this.ProductImage, as: 'ProductImages' }],
-    }).catch((error) => {
+    }).catch(error => {
       throw new Error(error);
     });
 
@@ -182,7 +182,43 @@ class ProductRepo extends Repository {
       },
       // group: ['Product.id', 'ProductImages.id', 'Owner.id'],
       // subQuery: false,
-    }).catch((error) => {
+    }).catch(error => {
+      throw new Error(error);
+    });
+
+    return products;
+  }
+
+  /**
+   * @description Method to get a product by the userId
+   * @param {Function} usePagination
+   * @param {Function} useOrdering
+   * @param {{userId: boolean}} isPublished
+   *
+   * @returns {Promise<*>} Response
+   */
+  static async getByUserId(usePagination, useOrdering, { userId }) {
+    const products = await this.Product.findAll({
+      ...usePagination(),
+      ...useOrdering(),
+      where: { [Op.or]: [{ userId }] },
+      include: [
+        {
+          model: this.ProductImage,
+          as: 'ProductImages',
+          attributes: ['image'],
+        },
+        {
+          model: this.Profile,
+          as: 'Owner',
+          attributes: ['firstName', 'lastName', 'image', 'userId'],
+          required: true,
+        },
+      ],
+      attributes: {
+        exclude: ['description'],
+      },
+    }).catch(error => {
       throw new Error(error);
     });
 
@@ -214,7 +250,7 @@ class ProductRepo extends Repository {
         ],
       },
       include: [{ model: this.ProductImage, as: 'ProductImages' }],
-    }).catch((error) => {
+    }).catch(error => {
       throw new Error(error);
     });
 
@@ -245,7 +281,7 @@ class ProductRepo extends Repository {
           },
         ],
       },
-    }).catch((error) => {
+    }).catch(error => {
       throw new Error(error);
     });
 
@@ -261,7 +297,23 @@ class ProductRepo extends Repository {
   static async countProducts({ isPublished = true }) {
     const count = await this.Product.count({
       where: { [Op.or]: [{ isPublished }] },
-    }).catch((error) => {
+    }).catch(error => {
+      throw new Error(error);
+    });
+
+    return count;
+  }
+
+  /**
+   * @description Method to count my products
+   * @param {{userId: number}} data
+   *
+   * @returns {Promise<*>} Response
+   */
+  static async countMyProducts({ userId }) {
+    const count = await this.Product.count({
+      where: { [Op.or]: [{ userId }] },
+    }).catch(error => {
       throw new Error(error);
     });
 
@@ -277,9 +329,7 @@ class ProductRepo extends Repository {
    * @returns {Promise<*>} Response
    */
   static async create(data) {
-    const {
-      title, price, description, userId, categoryId = null,
-    } = data;
+    const { title, price, description, userId, categoryId = null } = data;
 
     const product = this.Product.create({
       title,
@@ -288,7 +338,7 @@ class ProductRepo extends Repository {
       userId,
       categoryId,
       isPublished: false,
-    }).catch((error) => {
+    }).catch(error => {
       throw new Error(error);
     });
 
@@ -324,7 +374,7 @@ class ProductRepo extends Repository {
     this.ProductView.create({
       productId,
       viewerId,
-    }).catch((error) => {
+    }).catch(error => {
       throw new Error(error);
     });
 
@@ -358,7 +408,7 @@ class ProductRepo extends Repository {
     this.ProductLike.create({
       productId,
       likerId,
-    }).catch((error) => {
+    }).catch(error => {
       throw new Error(error);
     });
 
@@ -387,7 +437,7 @@ class ProductRepo extends Repository {
     this.ProductBookmark.create({
       productId,
       bookmarkerId,
-    }).catch((error) => {
+    }).catch(error => {
       throw new Error(error);
     });
   }

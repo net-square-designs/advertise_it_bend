@@ -53,7 +53,9 @@ class ProductController {
         });
       }
 
-      const promises = imageFiles.map(image => imageService.uploader.upload(image.path));
+      const promises = imageFiles.map(image =>
+        imageService.uploader.upload(image.path),
+      );
 
       const uploadImages = await Promise.all(promises);
 
@@ -117,8 +119,8 @@ class ProductController {
         return AppResponse.conflict(res, {
           message: `Product already has ${
             product.ProductImages.length
-          } images. You can add a max of ${maxImageLength
-            - product.ProductImages.length} more`,
+          } images. You can add a max of ${maxImageLength -
+            product.ProductImages.length} more`,
         });
       }
 
@@ -153,11 +155,12 @@ class ProductController {
 
     try {
       const countProducts = () => ProductRepo.countProducts(isPublished);
-      const getProducts = () => ProductRepo.getByPagination(
-        usePagination,
-        useOrdering,
-        isPublished,
-      );
+      const getProducts = () =>
+        ProductRepo.getByPagination(
+          usePagination,
+          useOrdering,
+          isPublished,
+        );
 
       const [count, products] = await Promise.all([
         countProducts(),
@@ -184,13 +187,54 @@ class ProductController {
    *
    * @returns {Promise<AppResponse>} The Return Object
    */
+  static async fetchMyProducts(req, res) {
+    const {
+      usePagination,
+      paginationData,
+      useOrdering,
+      user,
+    } = res.locals;
+
+    try {
+      const countMyProducts = () =>
+        ProductRepo.countMyProducts({ userId: user.id });
+
+      const getMyProducts = () =>
+        ProductRepo.getByUserId(usePagination, useOrdering, {
+          userId: user.id,
+        });
+
+      const [count, products] = await Promise.all([
+        countMyProducts(),
+        getMyProducts(),
+      ]);
+
+      const totalPages = Math.ceil(count / paginationData.pageSize);
+
+      const metaData = { count, totalPages, ...paginationData };
+
+      return AppResponse.success(res, { data: { products, metaData } });
+    } catch (errors) {
+      return AppResponse.serverError(res, { errors });
+    }
+  }
+
+  /**
+   * @description controller method to fetch paginated products
+   * @param {*} req req
+   * @param {*} res res
+   *
+   * @returns {Promise<AppResponse>} The Return Object
+   */
   static async searchProducts(req, res) {
     const { usePagination, paginationData } = res.locals;
     const { name } = req.query;
 
     try {
-      const countProducts = () => ProductRepo.countSearch(usePagination, { name });
-      const getProducts = () => ProductRepo.search(usePagination, { name });
+      const countProducts = () =>
+        ProductRepo.countSearch(usePagination, { name });
+      const getProducts = () =>
+        ProductRepo.search(usePagination, { name });
 
       const [count, products] = await Promise.all([
         countProducts(),
@@ -224,13 +268,15 @@ class ProductController {
 
     try {
       const getProductById = () => ProductRepo.getById(productId);
-      const getProductImageByProductId = () => ProductImageRepo.getByProductId({
-        productId,
-      });
-      const getLikeByUserIdAndProductId = () => ProductLikeRepo.getBylikerIdAndProductId({
-        likerId: id,
-        productId,
-      });
+      const getProductImageByProductId = () =>
+        ProductImageRepo.getByProductId({
+          productId,
+        });
+      const getLikeByUserIdAndProductId = () =>
+        ProductLikeRepo.getBylikerIdAndProductId({
+          likerId: id,
+          productId,
+        });
 
       const [product, productImage, isLikedByUser] = await Promise.all([
         getProductById(),
@@ -245,15 +291,17 @@ class ProductController {
         product.dataValues.views = parseInt(product.dataValues.views, 10);
         product.dataValues.likes = parseInt(product.dataValues.likes, 10);
 
-        const checkFollowing = () => FollowerRepo.checkFollowing({
-          followerId: id,
-          userId: product.Owner.userId,
-        });
+        const checkFollowing = () =>
+          FollowerRepo.checkFollowing({
+            followerId: id,
+            userId: product.Owner.userId,
+          });
 
-        const addView = () => ProductRepo.addView({
-          productId,
-          viewerId: id.toString(),
-        });
+        const addView = () =>
+          ProductRepo.addView({
+            productId,
+            viewerId: id.toString(),
+          });
 
         const [add, isFollowing] = await Promise.all([
           addView(),
@@ -364,10 +412,11 @@ class ProductController {
 
     try {
       const getProduct = () => ProductRepo.getById(id);
-      const checkProductOwner = () => ProductRepo.getByIdAndUserId({
-        id: productId,
-        userId: id,
-      });
+      const checkProductOwner = () =>
+        ProductRepo.getByIdAndUserId({
+          id: productId,
+          userId: id,
+        });
       const [isProductOwner, product] = await Promise.all([
         checkProductOwner(),
         getProduct(),
@@ -402,10 +451,11 @@ class ProductController {
 
     try {
       const getProduct = () => ProductRepo.getById(id);
-      const checkProductOwner = () => ProductRepo.getByIdAndUserId({
-        id: productId,
-        userId: id,
-      });
+      const checkProductOwner = () =>
+        ProductRepo.getByIdAndUserId({
+          id: productId,
+          userId: id,
+        });
       const [isProductOwner, product] = await Promise.all([
         checkProductOwner(),
         getProduct(),
