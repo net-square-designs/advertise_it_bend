@@ -44,6 +44,8 @@ productRouter.post(
  */
 productRouter.get('/', ProductController.fetchProducts);
 
+productRouter.get('/me', checkUserAuth, ProductController.fetchMyProducts);
+
 /**
  * search products
  */

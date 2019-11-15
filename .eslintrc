@@ -20,7 +20,9 @@
     "no-param-reassign": "error",
     "comma-dangle": 1,
     "curly": ["error", "multi-line"],
+    "implicit-arrow-linebreak": "off",
     "import/prefer-default-export": "off",
+    "function-paren-newline": "off",
     "import/no-unresolved": [
       2,
       {
